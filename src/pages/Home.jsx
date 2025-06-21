@@ -1,0 +1,145 @@
+import React from 'react';
+import { Container, Row, Col, Button, Card } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import '../home.css'; 
+
+function Home() {
+  return (
+    <div className="home-page-container">
+      {/* Hero Section */}
+      <section className="hero-section text-white d-flex align-items-center justify-content-center text-center">
+        <div className="hero-content p-4 rounded-3 shadow-lg">
+          <h1 className="display-4 fw-bold mb-3">Preserve Your Future Self</h1>
+          <p className="lead mb-4">
+            Create a digital time capsule with messages and memories, locked away until a date you choose.
+            A unique way to connect with your future self or share a surprise with loved ones.
+          </p>
+          <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <Button as={Link} to="/new" variant="primary" size="lg" className="rounded-pill px-4 py-2 fw-bold">
+              Create Your Capsule
+            </Button>
+            <Button as={Link} to="/about" variant="outline-light" size="lg" className="rounded-pill px-4 py-2 fw-bold">
+              Learn More
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* What is a Digital Time Capsule? Section */}
+      <Container className="my-5 py-5 text-center text-white">
+        <h2 className="display-5 fw-bold mb-4 text-primary">What is a Digital Time Capsule?</h2>
+        <p className="fs-5 mx-auto" style={{ maxWidth: '800px' }}>
+          It's more than just a message in a bottle; it's a secure digital vault for your thoughts, hopes, and memories.
+          Whether it's a letter to your future self, a photo album for your children's graduation, or a video message
+          for a friend's milestone, DTC ensures your sentiments are delivered exactly when they matter most.
+        </p>
+        <Row className="mt-5 justify-content-center">
+          <Col md={4} className="mb-4">
+            <Card bg="dark" text="white" className="h-100 shadow-sm border-primary">
+              <Card.Body>
+                <Card.Title className="h4 fw-bold text-primary">Text Messages</Card.Title>
+                <Card.Text className="text-white-50">
+                  Write heartfelt letters, reflective notes, or even just simple reminders to be opened years from now.
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col md={4} className="mb-4">
+            <Card bg="dark" text="white" className="h-100 shadow-sm border-primary">
+              <Card.Body>
+                <Card.Title className="h4 fw-bold text-primary">Image & Video Memories</Card.Title>
+                <Card.Text className="text-white-50">
+                  Upload cherished photos or record video messages, preserving moments exactly as they are today.
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col md={4} className="mb-4">
+            <Card bg="dark" text="white" className="h-100 shadow-sm border-primary">
+              <Card.Body>
+                <Card.Title className="h4 fw-bold text-primary">Future Delivery</Card.Title>
+                <Card.Text className="text-white-50">
+                  Set a specific future date for your capsule to be unlocked and delivered, creating a delightful surprise.
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+
+      {/* How It Works Section */}
+      <section className="bg-secondary-dark py-5 text-white"> 
+        <Container className="py-4">
+          <h2 className="display-5 fw-bold mb-5 text-center text-primary">How It Works</h2>
+          <Row className="justify-content-center">
+            <Col md={4} className="text-center mb-4">
+              <div className="icon-circle mb-3 bg-primary text-white mx-auto">1</div>
+              <h4 className="fw-bold text-white mb-2">Create Your Capsule</h4>
+              <p className="text-white-50">
+                Craft your message, upload your media, and select your recipients. It's quick and easy to start.
+              </p>
+            </Col>
+            <Col md={4} className="text-center mb-4">
+              <div className="icon-circle mb-3 bg-primary text-white mx-auto">2</div>
+              <h4 className="fw-bold text-white mb-2">Set the Unlock Date</h4>
+              <p className="text-white-50">
+                Choose any date in the future  next month, next year, or even decades from now. Your capsule stays secure until then.
+              </p>
+            </Col>
+            <Col md={4} className="text-center mb-4">
+              <div className="icon-circle mb-3 bg-primary text-white mx-auto">3</div>
+              <h4 className="fw-bold text-white mb-2">Anticipate the Reveal</h4>
+              <p className="text-white-50">
+                On the chosen date, your capsule will be unlocked and accessible, bringing a smile to faces.
+              </p>
+            </Col>
+          </Row>
+          <div className="text-center mt-5">
+            <Button as={Link} to="/new" variant="outline-primary" size="lg" className="rounded-pill px-5 py-3 fw-bold">
+              Start Your Journey
+            </Button>
+          </div>
+        </Container>
+      </section>
+
+      {/* Why Choose DTC Section */}
+      <Container className="my-5 py-5 text-center text-white">
+        <h2 className="display-5 fw-bold mb-4 text-primary">Why Choose Digital Time Capsule?</h2>
+        <Row className="justify-content-center mt-4">
+          <Col md={6} lg={4} className="mb-4">
+            <Card bg="dark" text="white" className="h-100 shadow-sm border-primary">
+              <Card.Body>
+                <Card.Title className="h5 fw-bold text-primary">Personal Reflection</Card.Title>
+                <Card.Text className="text-white-50">
+                  A unique opportunity for self-discovery and growth by revisiting past thoughts and goals.
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col md={6} lg={4} className="mb-4">
+            <Card bg="dark" text="white" className="h-100 shadow-sm border-primary">
+              <Card.Body>
+                <Card.Title className="h5 fw-bold text-primary">Memorable Surprises</Card.Title>
+                <Card.Text className="text-white-50">
+                  Delight friends and family with unexpected messages and gifts from the past.
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col md={6} lg={4} className="mb-4">
+            <Card bg="dark" text="white" className="h-100 shadow-sm border-primary">
+              <Card.Body>
+                <Card.Title className="h5 fw-bold text-primary">Digital Legacy</Card.Title>
+                <Card.Text className="text-white-50">
+                  Securely pass on stories, advice, and family history to future generations.
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+    </div>
+  );
+}
+
+export default Home;
