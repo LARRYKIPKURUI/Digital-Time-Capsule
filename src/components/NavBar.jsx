@@ -29,9 +29,9 @@ function CustomNavbar({ isLoggedIn, onLogout }) {
               menuVariant="dark" 
             >
               <NavDropdown.Item as={Link} to="/new" className="text-white-50">Create Capsule</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/capsules" className="text-white-50">List Capsules</NavDropdown.Item>
-              <NavDropdown.Divider /> 
-              <NavDropdown.Item href="#action/3.4" className="text-muted small">More Info</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/capsule" className="text-white-50">List Capsules</NavDropdown.Item>
+              {/* <NavDropdown.Divider />  */}
+              {/* <NavDropdown.Item href="#action/3.4" className="text-muted small">More Info</NavDropdown.Item> */}
             </NavDropdown>
           </Nav>
 
