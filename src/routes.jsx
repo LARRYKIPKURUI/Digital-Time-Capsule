@@ -14,7 +14,7 @@ function AppRoutes() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/new" element={<NewCapsule />} />
-      {/* <Route path="/capsule/:id" element={<ViewCapsule />} /> */}
+      <Route path="/capsule/:id" element={<ViewCapsule />} />
     </Routes>
   )
 }
