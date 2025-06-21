@@ -3,12 +3,14 @@ import Home from './pages/Home'
 import About from './pages/About'
 import NewCapsule from './pages/NewCapsule'
 import ViewCapsule from './pages/ViewCapsule'
+import RegisterPage from './pages/RegisterPage'
 
 function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
+      <Route path="/register" element={<RegisterPage />} />
       <Route path="/new" element={<NewCapsule />} />
       <Route path="/capsule/:id" element={<ViewCapsule />} />
     </Routes>
