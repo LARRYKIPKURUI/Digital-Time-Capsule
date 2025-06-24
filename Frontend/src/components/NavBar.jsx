@@ -1,13 +1,14 @@
-import { Navbar, Nav, NavDropdown, Container, Button } from "react-bootstrap";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Navbar, Nav, Container, Button } from "react-bootstrap";
+import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/time-capsule.png";
 
 function CustomNavbar({ isLoggedIn, onLogout }) {
   const location = useLocation();
-  const navigate = useNavigate();
 
   const isActive = (path) =>
-    location.pathname === path ? "text-primary fw-bold" : "text-white px-3 fw-semibold";
+    location.pathname === path
+      ? "text-primary fw-bold text-underline"
+      : "text-white px-3 fw-semibold";
 
   return (
     <Navbar
@@ -40,28 +41,13 @@ function CustomNavbar({ isLoggedIn, onLogout }) {
             <Nav.Link as={Link} to="/about" className={isActive("/about")}>
               About
             </Nav.Link>
+            <Nav.Link as={Link} to="/new" className={isActive("/new")}>
+              Create Capsule
+            </Nav.Link>
+            <Nav.Link as={Link} to="/capsule" className={isActive("/capsule")}>
+              List Capsules
+            </Nav.Link>
 
-            <NavDropdown
-              title="Capsule"
-              id="capsule-dropdown"
-              className="px-3 fw-semibold"
-              menuVariant="dark"
-            >
-              <NavDropdown.Item 
-              as={Link}
-              to="/new" 
-               className={isActive("/new")}
-              >
-                Create Capsule
-              </NavDropdown.Item>
-              <NavDropdown.Item
-                as={Link}
-                to="/capsule"
-                className={isActive("/capsule")}
-              >
-                List Capsules
-              </NavDropdown.Item>
-            </NavDropdown>
           </Nav>
 
           {/* Log In / Log Out */}
