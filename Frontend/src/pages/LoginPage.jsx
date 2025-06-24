@@ -46,7 +46,7 @@ function LoginPage() {
     }
 
     try {
-      const response = await fetch("/api/login", {
+      const response = await fetch("/api/login", { //Mock Backend Endpoint to hold as placeholder
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -137,7 +137,7 @@ function LoginPage() {
 
               <Card.Footer className="bg-white text-center border-0 pb-4">
                 <small className="text-muted">
-                  Don't have an account? <Link to="/signup">Sign Up</Link>
+                  Don't have an account? <Link to="/register">Sign Up</Link>
                 </small>
               </Card.Footer>
             </Card>

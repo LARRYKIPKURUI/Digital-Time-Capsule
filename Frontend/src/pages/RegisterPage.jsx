@@ -1,86 +1,172 @@
 import React, { useState } from "react";
-// import axios from "axios";
-import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
+import { useNavigate, Link } from "react-router-dom";
+import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
+import Swal from "sweetalert2";
+import { motion } from "framer-motion";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { username, email, password } = formData;
+
+  const showError = (msg) => {
+    Swal.fire({
+      icon: "error",
+      title: "Registration Failed",
+      text: msg,
+      confirmButtonColor: "#dc3545",
+    });
+  };
+
+  const showSuccess = (msg) => {
+    Swal.fire({
+      icon: "success",
+      title: "Account Created!",
+      text: msg,
+      timer: 1500,
+      showConfirmButton: false,
+    });
+  };
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    // sending data to  Flask API
-    console.log("Form data submitted:", formData);
+    setIsLoading(true);
 
-    //  future API call with axios:
-    /*
-        try {
-            // Replace with your actual backend URL
-            const res = await axios.post('http://localhost:5000/api/auth/register', formData);
-            console.log('Server response:', res.data);
-            // You can then redirect the user or show a success message
-        } catch (err) {
-            console.error(err.response.data);
-            // Handle registration errors (e.g., user already exists)
-        }
-        */
+    // Basic validation
+    if (!username.trim() || !email.trim() || !password.trim()) {
+      setIsLoading(false);
+      return showError("All fields are required.");
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setIsLoading(false);
+      return showError("Please enter a valid email address.");
+    }
+
+    if (password.length < 6) {
+      setIsLoading(false);
+      return showError("Password must be at least 6 characters.");
+    }
+
+    try {
+      const response = await fetch("/api/register", {  //Mock endpoint
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        showSuccess("Welcome!");
+        setTimeout(() => navigate("/login"), 1600);
+      } else {
+        const errData = await response.json();
+        showError(errData.error || "Registration failed.");
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      showError("Something went wrong. Please try again later.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <Container className="mt-5">
-      <Row className="justify-content-center">
-        <Col md={6}>
-          <Card className="p-4 shadow rounded-4">
-            <h2 className="text-center mb-4">Create Your Account</h2>
-            <Form onSubmit={onSubmit}>
-              <Form.Group controlId="formUsername" className="mb-3">
-                <Form.Control
-                  type="text"
-                  placeholder="Username"
-                  name="username"
-                  value={username}
-                  onChange={onChange}
-                  required
-                />
-              </Form.Group>
+    <Container fluid className="d-flex align-items-center justify-content-center bg-light" style={{ minHeight: "100vh" }}>
+      <Row className="w-100 justify-content-center">
+        <Col xs={11} sm={9} md={6} lg={4}>
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Card className="shadow rounded-4 border-0">
+              <Card.Header className="text-center bg-white border-0 pt-4">
+                <h4 className="fw-bold text-primary">Create Your Account</h4>
+                <p className="text-muted mb-0">Join and start preserving memories</p>
+              </Card.Header>
+              <Card.Body className="px-4 pb-4">
+                <Form onSubmit={onSubmit}>
+                  <Form.Group className="mb-3" controlId="formUsername">
+                    <Form.Label className="fw-semibold">Username</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter username"
+                      name="username"
+                      value={username}
+                      onChange={onChange}
+                      required
+                      className="rounded-3"
+                    />
+                  </Form.Group>
 
-              <Form.Group controlId="formEmail" className="mb-3">
-                <Form.Control
-                  type="email"
-                  placeholder="Email Address"
-                  name="email"
-                  value={email}
-                  onChange={onChange}
-                  required
-                />
-              </Form.Group>
+                  <Form.Group className="mb-3" controlId="formEmail">
+                    <Form.Label className="fw-semibold">Email Address</Form.Label>
+                    <Form.Control
+                      type="email"
+                      placeholder="Enter email"
+                      name="email"
+                      value={email}
+                      onChange={onChange}
+                      required
+                      className="rounded-3"
+                    />
+                  </Form.Group>
 
-              <Form.Group controlId="formPassword" className="mb-4">
-                <Form.Control
-                  type="password"
-                  placeholder="Password"
-                  name="password"
-                  value={password}
-                  onChange={onChange}
-                  minLength="6"
-                  required
-                />
-              </Form.Group>
+                  <Form.Group className="mb-4" controlId="formPassword">
+                    <Form.Label className="fw-semibold">Password</Form.Label>
+                    <div className="input-group">
+                      <Form.Control
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Enter password"
+                        name="password"
+                        value={password}
+                        onChange={onChange}
+                        required
+                        className="rounded-start-3"
+                      />
+                      <Button
+                        variant="outline-secondary"
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="rounded-end-3"
+                      >
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                      </Button>
+                    </div>
+                  </Form.Group>
 
-              <div className="d-grid">
-                <Button variant="primary" type="submit">
-                  Register
-                </Button>
-              </div>
-            </Form>
-          </Card>
+                  <div className="d-grid">
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      disabled={isLoading}
+                      className="rounded-3 py-2 fw-semibold"
+                    >
+                      {isLoading ? "Registering..." : "Register"}
+                    </Button>
+                  </div>
+                </Form>
+              </Card.Body>
+              <Card.Footer className="bg-white text-center border-0 pb-4">
+                <small className="text-muted">
+                  Already have an account? <Link to="/login">Login</Link>
+                </small>
+              </Card.Footer>
+            </Card>
+          </motion.div>
         </Col>
       </Row>
     </Container>
