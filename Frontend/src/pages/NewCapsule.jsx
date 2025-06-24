@@ -12,14 +12,13 @@ function CreateCapsulePage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const showError = (msg) => {
-  Swal.fire({
-    icon: 'error',
-    title: 'Invalid',
-    text: msg,
-    confirmButtonColor: '#dc3545', 
-  });
-};
-
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid',
+      text: msg,
+      confirmButtonColor: '#dc3545',
+    });
+  };
 
   const showSuccess = (msg) => {
     Swal.fire({
@@ -31,11 +30,11 @@ function CreateCapsulePage() {
     });
   };
 
-  const handleCreate = (e) => {
+  const handleCreate = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Validation of INput 
+    // Form  validation
     if (!title.trim()) {
       setIsLoading(false);
       return showError('Capsule Title cannot be empty.');
@@ -61,16 +60,36 @@ function CreateCapsulePage() {
       return showError('Unlock Date must be in the future.');
     }
 
-    // Ready to submit
-    console.log('Capsule ready:', { title, message, unlockDate, imageURL });
+    // Prepare data for POST
+    const payload = {
+      title,
+      message,
+      unlock_date: unlockDate,
+      image_url: imageURL || null,
+    };
 
-    // Simulating Success AS am still working on Backend
-    showSuccess('Capsule data validated. Ready for backend submission!');
-    setTimeout(() => {
-      navigate('/capsule');
-    }, 1600);
+    try {
+      const response = await fetch('/api/capsules', {  // TO replace ('/api/capsules') with Backend API Endpoint
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
 
-    setIsLoading(false);
+      if (response.ok) {
+        showSuccess('Capsule created successfully!');
+        setTimeout(() => navigate('/capsule'), 1600);
+      } else {
+        const errData = await response.json();
+        throw new Error(errData.error || 'Failed to create capsule.');
+      }
+    } catch (err) {
+      console.error('Error creating capsule:', err);
+      showError(err.message || 'Something went wrong while creating the capsule.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -114,7 +133,7 @@ function CreateCapsulePage() {
 
                 <Form.Group className="mb-3" controlId="capsuleImage">
                   <Form.Label className="fw-semibold text-primary">
-                    Add a Link to Your Picture 
+                    Add a Link to Your Picture
                   </Form.Label>
                   <Form.Control
                     type="text"
