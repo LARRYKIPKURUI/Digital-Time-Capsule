@@ -1,114 +1,151 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { Container, Row, Col, Card, Form, Button, Alert } from 'react-bootstrap';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
+import Swal from "sweetalert2";
+import { motion } from "framer-motion";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function LoginPage() {
-    const navigate = useNavigate();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState(''); // State to hold validation error messages
-    const [isLoading, setIsLoading] = useState(false); // State for loading indicator
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-    const handleLogin = async (e) => {
-        e.preventDefault();
-        setError(''); 
-        setIsLoading(true); // Indicate a process is starting
+  const showError = (msg) => {
+    Swal.fire({
+      icon: "error",
+      title: "Login Failed",
+      text: msg,
+      confirmButtonColor: "#dc3545",
+    });
+  };
 
-        // --- Client-side Validation ---
-        // 1. Check if fields are empty
-        if (!email.trim() || !password.trim()) {
-            setError('Please enter both your email and password.');
-            setIsLoading(false); // Stop loading, validation failed
-            return; 
-        }
+  const showSuccess = (msg) => {
+    Swal.fire({
+      icon: "success",
+      title: "Login Successful!",
+      text: msg,
+      timer: 1500,
+      showConfirmButton: false,
+    });
+  };
 
-        // 2. Validate email format
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            setError('Please enter a valid email address.');
-            setIsLoading(false); 
-            return; // Stop the function execution
-        }
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
 
-        // --- If client-side validation passes, simulate sending to backend ---
-        console.log('Client-side validation passed. Sending data to backend for authentication:', { email, password });
+    if (!email.trim() || !password.trim()) {
+      setIsLoading(false);
+      return showError("Please enter both your email and password.");
+    }
 
-        try {
-            // this is where the API Call will be made
-           
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setIsLoading(false);
+      return showError("Please enter a valid email address.");
+    }
 
-            //  SIMULATION ONLY 
-            // For this refactor, i'll just simulate a successful 'send'
-            // and then let the backend handle the *actual* login logic.
-            await new Promise(resolve => setTimeout(resolve, 500)); // Simulate a small delay for "sending"
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-            // If we reach here, it means client-side validation passed and data was "sent".
-            // The actual login success/failure and redirection would happen AFTER the backend response.
-            // For now, i'll redirect as if the backend would have handled it.
-            
-            navigate('/dashboard');
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("token", data.token);
+        showSuccess("Welcome back!");
+        setTimeout(() => navigate("/dashboard"), 1600);
+      } else {
+        const errData = await response.json();
+        showError(errData.error || "Invalid email or password.");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      showError("Something went wrong. Please try again later.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-        } catch (backendError) {
-            // This catch block will handle network errors or issues with the backend call itself
-            console.error('Network or backend communication error:', backendError);
-            setError('Could not connect to the server. Please try again later.');
-        } finally {
-            setIsLoading(false); 
-        }
-    };
+  return (
+    <Container fluid className="d-flex align-items-center justify-content-center bg-light" style={{ minHeight: "100vh" }}>
+      <Row className="w-100 justify-content-center">
+        <Col xs={11} sm={9} md={6} lg={4}>
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Card className="shadow rounded-4 border-0">
+              <Card.Header className="text-center bg-white border-0 pt-4">
+                <h4 className="fw-bold text-primary">Welcome Back</h4>
+                <p className="text-muted mb-0">Sign in to continue to your time capsules</p>
+              </Card.Header>
 
-    return (
-        <Container className="d-flex align-items-center justify-content-center" style={{ minHeight: '80vh' }}>
-            <Row>
-                <Col md={12}>
-                    <Card style={{ width: '25rem' }}>
-                        <Card.Header as="h4" className="text-center">Welcome Back</Card.Header>
-                        <Card.Body>
-                            <Card.Text className="text-center mb-4 text-muted">Sign in to continue to your time capsules.</Card.Text>
+              <Card.Body className="px-4 pb-4">
+                <Form onSubmit={handleLogin}>
+                  <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label className="fw-semibold">Email Address</Form.Label>
+                    <Form.Control
+                      type="email"
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="rounded-3"
+                    />
+                  </Form.Group>
 
-                            {/* Display validation error message if present */}
-                            {error && <Alert variant="danger" className="mb-3">{error}</Alert>}
+                  <Form.Group className="mb-4" controlId="formBasicPassword">
+                    <Form.Label className="fw-semibold">Password</Form.Label>
+                    <div className="input-group">
+                      <Form.Control
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Enter your password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        className="rounded-start-3"
+                      />
+                      <Button
+                        variant="outline-secondary"
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="rounded-end-3"
+                      >
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                      </Button>
+                    </div>
+                  </Form.Group>
 
-                            <Form onSubmit={handleLogin}>
-                                <Form.Group className="mb-3" controlId="formBasicEmail">
-                                    <Form.Label>Email address</Form.Label>
-                                    <Form.Control
-                                        type="email"
-                                        placeholder="Enter email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        required 
-                                    />
-                                </Form.Group>
+                  <div className="d-grid">
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      disabled={isLoading}
+                      className="rounded-3 py-2 fw-semibold"
+                    >
+                      {isLoading ? "Processing..." : "Login"}
+                    </Button>
+                  </div>
+                </Form>
+              </Card.Body>
 
-                                <Form.Group className="mb-3" controlId="formBasicPassword">
-                                    <Form.Label>Password</Form.Label>
-                                    <Form.Control
-                                        type="password"
-                                        placeholder="Password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        required 
-                                    />
-                                </Form.Group>
-                                <div className="d-grid">
-                                    <Button
-                                        variant="primary"
-                                        type="submit"
-                                        disabled={isLoading} // Disable button when loading
-                                    >
-                                        {isLoading ? 'Processing...' : 'Login'} {/* Change button text based on loading state */}
-                                    </Button>
-                                </div>
-                            </Form>
-                        </Card.Body>
-                         <Card.Footer className="text-muted text-center">
-                            Don't have an account? <Link to="/signup">Sign Up</Link>
-                        </Card.Footer>
-                    </Card>
-                </Col>
-            </Row>
-        </Container>
-    );
+              <Card.Footer className="bg-white text-center border-0 pb-4">
+                <small className="text-muted">
+                  Don't have an account? <Link to="/signup">Sign Up</Link>
+                </small>
+              </Card.Footer>
+            </Card>
+          </motion.div>
+        </Col>
+      </Row>
+    </Container>
+  );
 }
 
 export default LoginPage;
