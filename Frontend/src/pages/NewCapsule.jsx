@@ -1,146 +1,159 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Card, Form, Button, Alert, Row, Col } from 'react-bootstrap'; // Added Row, Col for potential layout if needed
+import { Container, Card, Form, Button, Row, Col } from 'react-bootstrap';
+import Swal from 'sweetalert2';
 
 function CreateCapsulePage() {
-    const navigate = useNavigate();
-    const [title, setTitle] = useState('');
-    const [message, setMessage] = useState('');
-    const [unlockDate, setUnlockDate] = useState('');
-    const [imageFile, setImageFile] = useState(null); // State for file input
-    const [isLoading, setIsLoading] = useState(false); // State for loading indicator
-    const [error, setError] = useState(''); // State for error messages
-    const [successMessage, setSuccessMessage] = useState(''); // State for success message
+  const navigate = useNavigate();
+  const [title, setTitle] = useState('');
+  const [message, setMessage] = useState('');
+  const [unlockDate, setUnlockDate] = useState('');
+  const [imageURL, setImageURL] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-    const handleCreate = (e) => { 
-        e.preventDefault();
-        setError(''); // Clear any previous errors
-        setSuccessMessage(''); // Clear any previous success messages
-        setIsLoading(true); 
+  const showError = (msg) => {
+  Swal.fire({
+    icon: 'error',
+    title: 'Invalid',
+    text: msg,
+    confirmButtonColor: '#dc3545', 
+  });
+};
 
-        // --- Client-side Validation ---
-        if (!title.trim()) {
-            setError('Capsule Title cannot be empty.');
-            setIsLoading(false); 
-            return; // Stop the function execution
-        }
-        if (!message.trim()) {
-            setError('Your Message cannot be empty.');
-            setIsLoading(false); // Stop loading, validation failed
-            return; 
-        }
-        if (!unlockDate) {
-            setError('Please select an Unlock Date.');
-            setIsLoading(false); 
-            return; 
-        }
 
-        const today = new Date();
-        today.setHours(0, 0, 0, 0); // Reset time to compare just dates
-        const selectedDate = new Date(unlockDate);
-        selectedDate.setHours(0, 0, 0, 0);
+  const showSuccess = (msg) => {
+    Swal.fire({
+      icon: 'success',
+      title: 'Success!',
+      text: msg,
+      timer: 1500,
+      showConfirmButton: false,
+    });
+  };
 
-        // Validate that the unlock date is in the future
-        if (selectedDate <= today) {
-            setError('Unlock Date must be in the future.');
-            setIsLoading(false); 
-            return; 
-        }
+  const handleCreate = (e) => {
+    e.preventDefault();
+    setIsLoading(true);
 
-        // --- Client-side validation passed ---
-        // At this point, the data is valid and ready to be sent to the backend.
-        console.log('Client-side validation passed. Data ready for backend submission:', { title, message, unlockDate, imageFile: imageFile ? imageFile.name : null });
+    // Validation of INput 
+    if (!title.trim()) {
+      setIsLoading(false);
+      return showError('Capsule Title cannot be empty.');
+    }
 
-        // --- BACKEND INTEGRATION POINT ---
-        // This is where I will make the API call to the backend.
-        // will use `fetch` or `axios` to send `title`, `message`, `unlockDate`,
-        // and `imageFile` (often as FormData for file uploads).
+    if (!message.trim()) {
+      setIsLoading(false);
+      return showError('Your Message cannot be empty.');
+    }
 
-        
-        // For this refactored component, without actual API calls,
-        // the loading state will stop here
-        // In a real app, the code above would replace this.
-        setIsLoading(false);
-        
-        
-        setSuccessMessage('Capsule data validated. Ready for backend submission!');
-        setTimeout(() => navigate('/dashboard'), 1500);
-    };
+    if (!unlockDate) {
+      setIsLoading(false);
+      return showError('Please select an Unlock Date.');
+    }
 
-    return (
-        <Container className="my-5"> {/* Added margin for better spacing */}
-            <Row className="justify-content-center">
-                <Col md={8} lg={6}> {/* Constrain width for better readability */}
-                    <h2>Create a New Time Capsule</h2>
-                    <p className="text-muted mb-4">Write a message to your future self. It will be sealed until the date you choose.</p>
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const selectedDate = new Date(unlockDate);
+    selectedDate.setHours(0, 0, 0, 0);
 
-                    {/* Display messages */}
-                    {error && <Alert variant="danger" onClose={() => setError('')} dismissible>{error}</Alert>}
-                    {successMessage && <Alert variant="success">{successMessage}</Alert>}
+    if (selectedDate <= today) {
+      setIsLoading(false);
+      return showError('Unlock Date must be in the future.');
+    }
 
-                    <Card>
-                        <Card.Body>
-                            <Form onSubmit={handleCreate}>
-                                <Form.Group className="mb-3" controlId="capsuleTitle">
-                                    <Form.Label>Capsule Title</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="e.g., Goals for Next Year"
-                                        value={title}
-                                        onChange={(e) => setTitle(e.target.value)}
-                                        required
-                                        disabled={isLoading} // Disable input while loading
-                                    />
-                                </Form.Group>
+    // Ready to submit
+    console.log('Capsule ready:', { title, message, unlockDate, imageURL });
 
-                                <Form.Group className="mb-3" controlId="capsuleMessage">
-                                    <Form.Label>Your Message</Form.Label>
-                                    <Form.Control
-                                        as="textarea"
-                                        rows={5}
-                                        placeholder="Dear Future Me..."
-                                        value={message}
-                                        onChange={(e) => setMessage(e.target.value)}
-                                        required
-                                        disabled={isLoading} 
-                                    />
-                                </Form.Group>
+    // Simulating Success AS am still working on Backend
+    showSuccess('Capsule data validated. Ready for backend submission!');
+    setTimeout(() => {
+      navigate('/capsule');
+    }, 1600);
 
-                                <Form.Group className="mb-3" controlId="capsuleImage">
-                                    <Form.Label>Add a Picture (Optional)</Form.Label>
-                                    <Form.Control
-                                        type="file"
-                                        onChange={(e) => setImageFile(e.target.files[0])} // Store the file object
-                                        disabled={isLoading}
-                                    />
-                                </Form.Group>
+    setIsLoading(false);
+  };
 
-                                <Form.Group className="mb-4" controlId="unlockDate">
-                                    <Form.Label>Unlock Date</Form.Label>
-                                    <Form.Control
-                                        type="date"
-                                        value={unlockDate}
-                                        onChange={(e) => setUnlockDate(e.target.value)}
-                                        required
-                                        disabled={isLoading} 
-                                    />
-                                </Form.Group>
+  return (
+    <Container className="my-3">
+      <Row className="justify-content-center">
+        <Col md={8} lg={6}>
+          <div className="text-center mb-3">
+            <h2 className="fw-bold">Create a New Time Capsule</h2>
+            <p className="text-muted p-3">
+              Write a message to your future self. It will be sealed until the date you choose.
+            </p>
+          </div>
 
-                                <Button
-                                    variant="primary"
-                                    type="submit"
-                                    disabled={isLoading} 
-                                >
-                                    {isLoading ? 'Sealing Capsule...' : 'Seal Capsule'} {/* Change text based on loading */}
-                                </Button>
-                            </Form>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
-        </Container>
-    );
+          <Card className="shadow-sm border-0 rounded-4">
+            <Card.Body className="p-4">
+              <Form onSubmit={handleCreate}>
+                <Form.Group className="mb-3" controlId="capsuleTitle">
+                  <Form.Label className="fw-semibold text-primary">Capsule Title</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="e.g., Goals for Next Year"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    disabled={isLoading}
+                    className="rounded-3"
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="capsuleMessage">
+                  <Form.Label className="fw-semibold text-primary">Your Message</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={5}
+                    placeholder="Dear Future Me..."
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    disabled={isLoading}
+                    className="rounded-3"
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="capsuleImage">
+                  <Form.Label className="fw-semibold text-primary">
+                    Add a Link to Your Picture 
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Paste image URL (e.g., https://example.com/photo.jpg)"
+                    value={imageURL}
+                    onChange={(e) => setImageURL(e.target.value)}
+                    disabled={isLoading}
+                    className="rounded-3"
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-4" controlId="unlockDate">
+                  <Form.Label className="fw-semibold text-primary">Unlock Date</Form.Label>
+                  <Form.Control
+                    type="date"
+                    value={unlockDate}
+                    onChange={(e) => setUnlockDate(e.target.value)}
+                    disabled={isLoading}
+                    className="rounded-3"
+                  />
+                </Form.Group>
+
+                <div className="d-grid">
+                  <Button
+                    variant="success"
+                    type="submit"
+                    disabled={isLoading}
+                    className="rounded-3 py-2"
+                  >
+                    {isLoading ? 'Sealing Capsule...' : 'Seal Capsule'}
+                  </Button>
+                </div>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
+  );
 }
 
 export default CreateCapsulePage;
