@@ -7,8 +7,8 @@ function CustomNavbar({ isLoggedIn, onLogout }) {
 
   const isActive = (path) =>
     location.pathname === path
-      ? "text-primary fw-bold text-underline"
-      : "text-white px-3 fw-semibold";
+      ? "text-primary fw-bold text-underline fs-5 font-monospace"
+      : "text-white px-3 fw-semibold fs-5";
 
   return (
     <Navbar

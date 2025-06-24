@@ -54,13 +54,13 @@ function Home() {
         <h2 className="display-5 fw-bold mb-4 text-primary">
           What is a Digital Time Capsule?
         </h2>
-        <p className="fs-5 mx-auto text-dark " style={{ maxWidth: "800px" }}>
+        <p className="fs-5 mx-auto text-dark p-4 text-bg-light" style={{ maxWidth: "800px" }}>
           It's more than just a message in a bottle; it's a secure digital vault
           for your thoughts, hopes, and memories. Whether it's a letter to your
           future self or a photo album for your children's graduation DTC ensures your sentiments are
           delivered exactly when they matter most.
         </p>
-        <Row className="mt-1 justify-content-center p">
+        <Row className="mt-1 justify-content-center ">
           {/* Text Messages */}
           <Col md={4} className="mb-4 ">
             <Card
