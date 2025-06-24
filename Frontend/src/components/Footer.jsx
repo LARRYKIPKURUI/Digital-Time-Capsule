@@ -2,7 +2,7 @@ import { Container, Row, Col, Nav, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faTwitter, faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
-import { faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons'; // For contact icons
+import { faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons'; // contact icons
 
 function Footer() {
   const currentYear = new Date().getFullYear();
@@ -12,6 +12,7 @@ function Footer() {
     <footer className="bg-dark text-white pt-5 pb-3 mt-5 shadow-lg">
       <Container>
         <Row className="mb-4">
+
           {/* Brand/About Section */}
           <Col lg={4} md={6} className="mb-4 mb-lg-0">
             <h5 className="text-uppercase fw-bold mb-3 text-primary">DTC</h5>
@@ -22,7 +23,7 @@ function Footer() {
 
           {/* Quick Links Section */}
           <Col lg={2} md={6} className="mb-4 mb-lg-0">
-            <h5 className="text-uppercase fw-bold mb-3">Quick Links</h5>
+            <h5 className="text-uppercase fw-bold mb-3 text-primary">Quick Links</h5>
             <Nav className="flex-column">
               <Nav.Link as={Link} to="/" className="text-white-50 py-1">Home</Nav.Link>
               <Nav.Link as={Link} to="/about" className="text-white-50 py-1">About Us</Nav.Link>
@@ -33,7 +34,7 @@ function Footer() {
 
           {/* Capsule Links Section */}
           <Col lg={3} md={6} className="mb-4 mb-md-0">
-            <h5 className="text-uppercase fw-bold mb-3">Capsules</h5>
+            <h5 className="text-uppercase fw-bold mb-3 text-primary">Capsules</h5>
             <Nav className="flex-column">
               <Nav.Link as={Link} to="/new" className="text-white-50 py-1">Create New Capsule</Nav.Link>
               <Nav.Link as={Link} to="/capsules" className="text-white-50 py-1">View My Capsules</Nav.Link>
@@ -43,7 +44,7 @@ function Footer() {
 
           {/* Contact Section */}
           <Col lg={3} md={6} className="mb-4 mb-md-0">
-            <h5 className="text-uppercase fw-bold mb-3">Contact Us</h5>
+            <h5 className="text-uppercase fw-bold mb-3 text-primary">Contact Us</h5>
             <ul className="list-unstyled text-white-50">
               <li className="mb-2">
                 <FontAwesomeIcon icon={faEnvelope} className="me-2 text-primary" /> info@dtc.com
@@ -67,16 +68,13 @@ function Footer() {
           {/* Social Media Links */}
           <Col md={6} className="text-center text-md-start mb-3 mb-md-0">
             <h6 className="d-inline-block me-3 mb-0">Follow Us:</h6>
-            <Button variant="outline-primary" href="https://facebook.com/dtc" target="_blank" className="btn-social me-2 rounded-circle">
+            <Button variant="outline-primary" href="https://facebook.com" target="_blank" className="btn-social me-2 rounded-circle">
               <FontAwesomeIcon icon={faFacebookF} />
             </Button>
-            <Button variant="outline-primary" href="https://twitter.com/dtc" target="_blank" className="btn-social me-2 rounded-circle">
-              <FontAwesomeIcon icon={faTwitter} />
-            </Button>
-            <Button variant="outline-primary" href="https://instagram.com/dtc" target="_blank" className="btn-social me-2 rounded-circle">
+            <Button variant="outline-primary" href="https://instagram.com" target="_blank" className="btn-social me-2 rounded-circle">
               <FontAwesomeIcon icon={faInstagram} />
             </Button>
-            <Button variant="outline-primary" href="https://linkedin.com/company/dtc" target="_blank" className="btn-social rounded-circle">
+            <Button variant="outline-primary" href="https://linkedin.com" target="_blank" className="btn-social rounded-circle">
               <FontAwesomeIcon icon={faLinkedinIn} />
             </Button>
           </Col>

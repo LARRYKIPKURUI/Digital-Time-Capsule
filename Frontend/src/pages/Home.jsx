@@ -1,4 +1,5 @@
 import React from "react";
+import { Typewriter } from "react-simple-typewriter";
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "../home.css";
@@ -12,11 +13,19 @@ function Home() {
       <section className="hero-section text-white d-flex align-items-center justify-content-center text-center">
         <div className="hero-content p-4 rounded-3 shadow-lg">
           <h1 className="display-4 fw-bold mb-3">Preserve Your Future Self</h1>
+
           <p className="lead mb-4">
-            Create a digital time capsule with messages and memories, locked
-            away until a date you choose. A unique way to connect with your
-            future self or share a surprise with loved ones.
+            <Typewriter
+              words={[
+                "Create a digital time capsule with messages and memories, locked away until a date you choose. A unique way to connect with your future self or share a surprise with loved ones.",
+              ]}
+              typeSpeed={40}
+              deleteSpeed={0}
+              delaySpeed={1000}
+              cursor
+            />
           </p>
+
           <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
             <Button
               as={Link}
@@ -45,11 +54,10 @@ function Home() {
         <h2 className="display-5 fw-bold mb-4 text-primary">
           What is a Digital Time Capsule?
         </h2>
-        <p className="fs-5 mx-auto" style={{ maxWidth: "800px" }}>
+        <p className="fs-5 mx-auto text-dark " style={{ maxWidth: "800px" }}>
           It's more than just a message in a bottle; it's a secure digital vault
           for your thoughts, hopes, and memories. Whether it's a letter to your
-          future self, a photo album for your children's graduation, or a video
-          message for a friend's milestone, DTC ensures your sentiments are
+          future self or a photo album for your children's graduation DTC ensures your sentiments are
           delivered exactly when they matter most.
         </p>
         <Row className="mt-1 justify-content-center p">
@@ -80,7 +88,7 @@ function Home() {
                     small steps I take today are leading us toward something
                     meaningful. I wonder what dreams you’ve pursued, what habits
                     you’ve kept, and what parts of life you’ve had to let go of
-                    to become who you are now.  "
+                    to become who you are now. "
                   </p>
                 </div>
               </Card.Body>
@@ -198,15 +206,15 @@ function Home() {
 
       {/* Why Choose DTC Section */}
       <Container className="my-5 py-5 text-center text-white">
-        <h2 className="display-5 fw-bold mb-4 text-primary">
+        <h2 className="display-5 fw-bold mb-5 text-primary">
           Why Choose Digital Time Capsule?
         </h2>
         <Row className="justify-content-center mt-4">
-          <Col md={6} lg={4} className="mb-4">
+          <Col md={6} lg={4} className="mb-4 ">
             <Card
               bg="dark"
               text="white"
-              className="h-100 shadow-sm border-primary"
+              className="h-100 shadow-sm border-primary p-4"
             >
               <Card.Body>
                 <Card.Title className="h5 fw-bold text-primary">
@@ -223,7 +231,7 @@ function Home() {
             <Card
               bg="dark"
               text="white"
-              className="h-100 shadow-sm border-primary"
+              className="h-100 shadow-sm border-primary p-4"
             >
               <Card.Body>
                 <Card.Title className="h5 fw-bold text-primary">
@@ -240,7 +248,7 @@ function Home() {
             <Card
               bg="dark"
               text="white"
-              className="h-100 shadow-sm border-primary"
+              className="h-100 shadow-sm border-primary p-4"
             >
               <Card.Body>
                 <Card.Title className="h5 fw-bold text-primary">
@@ -255,6 +263,7 @@ function Home() {
           </Col>
         </Row>
       </Container>
+      
     </div>
   );
 }
