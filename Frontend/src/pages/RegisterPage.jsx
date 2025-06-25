@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 import Swal from "sweetalert2";
-import { motion as MotionDiv } from "framer-motion";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const RegisterPage = () => {
@@ -40,68 +39,69 @@ const RegisterPage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmit = async (e) => {
-  e.preventDefault();
-  setIsLoading(true);
+    e.preventDefault();
+    setIsLoading(true);
 
-  if (!username.trim() || !email.trim() || !password.trim()) {
-    setIsLoading(false);
-    return showError("All fields are required.");
-  }
-
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    setIsLoading(false);
-    return showError("Please enter a valid email address.");
-  }
-
-  if (password.length < 6) {
-    setIsLoading(false);
-    return showError("Password must be at least 6 characters.");
-  }
-
-  try {
-    const response = await fetch("http://localhost:5555/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
-
-    const resData = await response.json(); // must come before checking status again
-
-    if (response.status === 201) {
-      showSuccess("Your account has been created!");
-
-      //  Reset the form
-      setFormData({ username: "", email: "", password: "" });
-
-      // Navigate after alert
-      setTimeout(() => navigate("/login"), 1600);
-    } else {
-      showError(resData.error || "Registration failed.");
+    if (!username.trim() || !email.trim() || !password.trim()) {
+      setIsLoading(false);
+      return showError("All fields are required.");
     }
-  } catch (error) {
-    console.error("Registration error:", error);
-    showError("Something went wrong. Please try again later.");
-  } finally {
-    setIsLoading(false);
-  }
-};
 
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setIsLoading(false);
+      return showError("Please enter a valid email address.");
+    }
+
+    if (password.length < 6) {
+      setIsLoading(false);
+      return showError("Password must be at least 6 characters.");
+    }
+
+    try {
+      const response = await fetch("http://localhost:5555/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const resData = await response.json(); // must come before checking status again
+
+      if (response.status === 201) {
+        showSuccess("Your account has been created!");
+
+        //  Reset the form
+        setFormData({ username: "", email: "", password: "" });
+
+        // Navigate after alert
+        setTimeout(() => navigate("/login"), 1600);
+      } else {
+        showError(resData.error || "Registration failed.");
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      showError("Something went wrong. Please try again later.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <Container fluid className="d-flex align-items-center justify-content-center bg-light" style={{ minHeight: "100vh" }}>
+    <Container
+      fluid
+      className="d-flex align-items-center justify-content-center bg-light"
+      style={{ minHeight: "100vh" }}
+    >
       <Row className="w-100 justify-content-center">
         <Col xs={11} sm={9} md={6} lg={4}>
-          <MotionDiv
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
+          <div>
             <Card className="shadow rounded-4 border-0">
               <Card.Header className="text-center bg-white border-0 pt-4">
                 <h4 className="fw-bold text-primary">Create Your Account</h4>
-                <p className="text-muted mb-0">Join and start preserving memories</p>
+                <p className="text-muted mb-0">
+                  Join and start preserving memories
+                </p>
               </Card.Header>
               <Card.Body className="px-4 pb-4">
                 <Form onSubmit={onSubmit}>
@@ -119,7 +119,9 @@ const RegisterPage = () => {
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="formEmail">
-                    <Form.Label className="fw-semibold">Email Address</Form.Label>
+                    <Form.Label className="fw-semibold">
+                      Email Address
+                    </Form.Label>
                     <Form.Control
                       type="email"
                       placeholder="Enter email"
@@ -172,7 +174,7 @@ const RegisterPage = () => {
                 </small>
               </Card.Footer>
             </Card>
-          </MotionDiv>
+          </div>
         </Col>
       </Row>
     </Container>

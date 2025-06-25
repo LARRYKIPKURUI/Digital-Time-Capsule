@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
 import Swal from "sweetalert2";
-import { motion as MotionDiv } from "framer-motion";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function LoginPage() {
@@ -46,7 +45,7 @@ function LoginPage() {
     }
 
     try {
-      const response = await fetch("http://localhost:5555/login", { //Mock Backend Endpoint to hold as placeholder
+      const response = await fetch("http://localhost:5555/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,8 +54,8 @@ function LoginPage() {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem("token", data.token);
+        await response.json();
+        // localStorage.setItem("token", data.token);
         showSuccess("Welcome back!");
         setTimeout(() => navigate("/dashboard"), 1600);
       } else {
@@ -72,24 +71,28 @@ function LoginPage() {
   };
 
   return (
-    <Container fluid className="d-flex align-items-center justify-content-center bg-light" style={{ minHeight: "100vh" }}>
+    <Container
+      fluid
+      className="d-flex align-items-center justify-content-center bg-light"
+      style={{ minHeight: "100vh" }}
+    >
       <Row className="w-100 justify-content-center">
         <Col xs={11} sm={9} md={6} lg={4}>
-          <MotionDiv
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
+          <div>
             <Card className="shadow rounded-4 border-0">
               <Card.Header className="text-center bg-white border-0 pt-4">
                 <h4 className="fw-bold text-primary">Welcome Back</h4>
-                <p className="text-muted mb-0">Sign in to continue to your time capsules</p>
+                <p className="text-muted mb-0">
+                  Sign in to continue to your time capsules
+                </p>
               </Card.Header>
 
               <Card.Body className="px-4 pb-4">
                 <Form onSubmit={handleLogin}>
                   <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label className="fw-semibold">Email Address</Form.Label>
+                    <Form.Label className="fw-semibold">
+                      Email Address
+                    </Form.Label>
                     <Form.Control
                       type="email"
                       placeholder="Enter your email"
@@ -141,7 +144,7 @@ function LoginPage() {
                 </small>
               </Card.Footer>
             </Card>
-          </MotionDiv>
+          </div>
         </Col>
       </Row>
     </Container>
