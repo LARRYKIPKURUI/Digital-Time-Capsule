@@ -1,188 +1,164 @@
-import  { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Card, Form, Button, Row, Col } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Spinner,
+  Badge,
+} from "react-bootstrap";
 import Swal from "sweetalert2";
 
-function CreateCapsulePage() {
+function ListCapsulesPage() {
+  const [capsules, setCapsules] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  const [title, setTitle] = useState("");
-  const [message, setMessage] = useState("");
-  const [unlockDate, setUnlockDate] = useState("");
-  const [mediaURL, setMediaURL] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
-  const showError = (msg) => {
-    Swal.fire({
-      icon: "error",
-      title: "Invalid",
-      text: msg,
-      confirmButtonColor: "#dc3545",
-    });
-  };
+  useEffect(() => {
+    const fetchCapsules = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const user = JSON.parse(localStorage.getItem("user"));
 
-  const showSuccess = (msg) => {
-    Swal.fire({
-      icon: "success",
-      title: "Success!",
-      text: msg,
-      timer: 1500,
-      showConfirmButton: false,
-    });
-  };
+        const response = await fetch(`http://localhost:5555/capsules/${user.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-  const handleCreate = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    if (!title.trim()) {
-      setIsLoading(false);
-      return showError("Capsule Title cannot be empty.");
-    }
-
-    if (!message.trim()) {
-      setIsLoading(false);
-      return showError("Your Message cannot be empty.");
-    }
-
-    if (!unlockDate) {
-      setIsLoading(false);
-      return showError("Please select an Unlock Date.");
-    }
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const selectedDate = new Date(unlockDate);
-    selectedDate.setHours(0, 0, 0, 0);
-
-    if (selectedDate <= today) {
-      setIsLoading(false);
-      return showError("Unlock Date must be in the future.");
-    }
-
-    const payload = {
-      title,
-      message,
-      unlock_date: unlockDate,
-      media_url: mediaURL || null,
+        if (response.ok) {
+          const data = await response.json();
+          setCapsules(data);
+        } else {
+          throw new Error("Failed to fetch capsules.");
+        }
+      } catch (err) {
+        console.error(err);
+        Swal.fire("Error", "Unable to load capsules.", "error");
+      } finally {
+        setIsLoading(false);
+      }
     };
+
+    fetchCapsules();
+  }, []);
+
+  const handleDelete = async (id) => {
+    const confirm = await Swal.fire({
+      title: "Delete Capsule?",
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      confirmButtonColor: "#dc3545",
+      cancelButtonText: "Cancel",
+      cancelButtonColor: "green",
+    });
+
+    if (!confirm.isConfirmed) return;
 
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch("http://localhost:5555/capsules", {
-        method: "POST",
+      const response = await fetch(`http://localhost:5555/capsules/${id}`, {
+        method: "DELETE",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(payload),
       });
 
       if (response.ok) {
-        showSuccess("Capsule created successfully!");
-        setTimeout(() => navigate("/capsules"), 1600);
+        setCapsules((prev) => prev.filter((c) => c.id !== id));
+        Swal.fire("Deleted!", "Capsule has been deleted.", "success");
       } else {
-        const errData = await response.json();
-        throw new Error(errData.error || "Failed to create capsule.");
+        throw new Error("Failed to delete.");
       }
     } catch (err) {
-      console.error("Error creating capsule:", err);
-      showError(
-        err.message || "Something went wrong while creating the capsule."
-      );
-    } finally {
-      setIsLoading(false);
+      console.error(err);
+      Swal.fire("Error", "Could not delete capsule.", "error");
     }
   };
 
+  if (isLoading) {
+    return (
+      <Container className="text-center my-5">
+        <Spinner animation="border" />
+        <p>Loading your capsules...</p>
+      </Container>
+    );
+  }
+
   return (
-    <Container className="my-3">
-      <Row className="justify-content-center">
-        <Col md={8} lg={6}>
-          <div className="text-center mb-3">
-            <h2 className="fw-bold">Create a New Time Capsule</h2>
-            <p className="text-muted p-3">
-              Write a message to your future self. It will be sealed until the
-              date you choose.
-            </p>
-          </div>
+    <Container className="my-4">
+      <div className="text-center mb-4">
+        <h2 className="fw-bold">Your Capsules</h2>
+      </div>
 
-          <Card className="shadow-sm border-0 rounded-4">
-            <Card.Body className="p-4">
-              <Form onSubmit={handleCreate}>
-                <Form.Group className="mb-3" controlId="capsuleTitle">
-                  <Form.Label className="fw-semibold text-primary">
-                    Capsule Title
-                  </Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="e.g., Goals for Next Year"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    disabled={isLoading}
-                    className="rounded-3"
-                  />
-                </Form.Group>
+      {capsules.length === 0 ? (
+        <p className="text-center">You haven’t created any capsules yet.</p>
+      ) : (
+        <Row xs={1} sm={2} md={3} lg={3} className="g-4">
+          {capsules.map((capsule) => {
+            const isLocked = new Date(capsule.unlock_date) > new Date();
 
-                <Form.Group className="mb-3" controlId="capsuleMessage">
-                  <Form.Label className="fw-semibold text-primary">
-                    Your Message
-                  </Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={5}
-                    placeholder="Dear Future Me..."
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    disabled={isLoading}
-                    className="rounded-3"
-                  />
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="capsuleImage">
-                  <Form.Label className="fw-semibold text-primary">
-                    Add a Link to Your Picture
-                  </Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Paste image URL (e.g., https://example.com/photo.jpg)"
-                    value={mediaURL}
-                    onChange={(e) => setMediaURL(e.target.value)}
-                    disabled={isLoading}
-                    className="rounded-3"
-                  />
-                </Form.Group>
-
-                <Form.Group className="mb-4" controlId="unlockDate">
-                  <Form.Label className="fw-semibold text-primary">
-                    Unlock Date
-                  </Form.Label>
-                  <Form.Control
-                    type="date"
-                    value={unlockDate}
-                    onChange={(e) => setUnlockDate(e.target.value)}
-                    disabled={isLoading}
-                    className="rounded-3"
-                  />
-                </Form.Group>
-
-                <div className="d-grid">
-                  <Button
-                    variant="success"
-                    type="submit"
-                    disabled={isLoading}
-                    className="rounded-3 py-2"
-                  >
-                    {isLoading ? "Sealing Capsule..." : "Seal Capsule"}
-                  </Button>
-                </div>
-              </Form>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+            return (
+              <Col key={capsule.id}>
+                <Card className="h-100 shadow-sm rounded-4">
+                  {capsule.media_url && (
+                    <Card.Img
+                      variant="top"
+                      src={capsule.media_url}
+                      alt={capsule.title}
+                      className="rounded-top"
+                      style={{ height: "200px", objectFit: "cover" }}
+                    />
+                  )}
+                  <Card.Body>
+                    <Card.Title>{capsule.title}</Card.Title>
+                    <Card.Text className="text-muted">
+                      Unlock Date:{" "}
+                      {new Date(capsule.unlock_date).toLocaleDateString()}
+                    </Card.Text>
+                    <Badge bg={isLocked ? "secondary" : "success"}>
+                      {isLocked ? "Locked" : "Unlocked"}
+                    </Badge>
+                  </Card.Body>
+                  <Card.Footer className="d-flex justify-content-between gap-2">
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      className="btn btn-primary text-white fw-bold"
+                      onClick={() => navigate(`/capsule/${capsule.id}`)}
+                    >
+                      View
+                    </Button>
+                    <Button
+                      variant="outline-warning"
+                      size="sm"
+                      className="btn btn-warning text-dark fw-bold"
+                      onClick={() => navigate(`/capsules/edit/${capsule.id}`)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="outline-danger"
+                      size="sm"
+                      className="btn btn-danger text-white fw-bold"
+                      onClick={() => handleDelete(capsule.id)}
+                    >
+                      Delete
+                    </Button>
+                  </Card.Footer>
+                </Card>
+              </Col>
+            );
+          })}
+        </Row>
+      )}
     </Container>
   );
 }
 
-export default CreateCapsulePage;
+export default ListCapsulesPage;

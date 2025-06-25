@@ -53,16 +53,16 @@ function LoginPage({ setIsLoggedIn}) {
       body: JSON.stringify({ email, password }),
     });
 
-    const data = await response.json(); //  Define 'data' here
+    const data = await response.json(); 
 
     if (response.ok) {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      setIsLoggedIn(true); //  Make sure you're receiving this as a prop
+      setIsLoggedIn(true); 
 
       showSuccess("Welcome back!");
-      setTimeout(() => navigate("/dashboard"), 1500); // or navigate somewhere appropriate
+      setTimeout(() => navigate("/"), 1500); 
     } else {
       showError(data.error || "Invalid email or password.");
     }

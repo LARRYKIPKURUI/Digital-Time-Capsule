@@ -7,9 +7,9 @@ import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import PrivateRoute from "./components/PrivateRoute";
 import ListCapsulesPage from "./pages/ListCapsulesPage";
+import EditCapsulePage from "./pages/EditCapsulePage";
 
 function AppRoutes({ setIsLoggedIn }) {
-
   return (
     <Routes>
       <Route path="/" element={<Home />} />
@@ -41,7 +41,15 @@ function AppRoutes({ setIsLoggedIn }) {
         path="/capsules"
         element={
           <PrivateRoute>
-            <ListCapsulesPage/>
+            <ListCapsulesPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/capsules/edit/:id"
+        element={
+          <PrivateRoute>
+            <EditCapsulePage />
           </PrivateRoute>
         }
       />
