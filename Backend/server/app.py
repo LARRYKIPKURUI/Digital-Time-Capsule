@@ -148,6 +148,63 @@ def view_capsule(id):
 
     return jsonify(capsule.to_dict()), 200
 
+# Update capsule
+@app.route('/capsules/<int:id>', methods=['PATCH'])
+@jwt_required()
+def update_capsule(id):
+    user_id = get_jwt_identity()
+    capsule = Capsule.query.get(id)
+
+    if not capsule:
+        return jsonify({"error": "Capsule not found"}), 404
+
+    if capsule.user_id != user_id:
+        return jsonify({"error": "Unauthorized"}), 403
+
+    data = request.get_json()
+    capsule.title = data.get('title', capsule.title)
+    capsule.message = data.get('message', capsule.message)
+    capsule.media_url = data.get('media_url', capsule.media_url)
+    
+    if 'unlock_date' in data:
+        capsule.unlock_date = datetime.fromisoformat(data['unlock_date'])
+
+    db.session.commit()
+    return jsonify(capsule.to_dict()), 200
+
+# Get single capsule (auth protected)
+@app.route('/capsules/<int:id>', methods=['GET'])
+@jwt_required()
+def get_capsule(id):
+    current_user = get_jwt_identity()
+    capsule = Capsule.query.get(id)
+
+    if not capsule:
+        return jsonify({"error": "Capsule not found"}), 404
+
+    if capsule.user_id != current_user:
+        return jsonify({"error": "Forbidden"}), 403
+
+    return jsonify(capsule.to_dict()), 200
+
+
+# Delete capsule
+@app.route('/capsules/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_capsule(id):
+    user_id = get_jwt_identity()
+    capsule = Capsule.query.get(id)
+
+    if not capsule:
+        return jsonify({"error": "Capsule not found"}), 404
+
+    if capsule.user_id != user_id:
+        return jsonify({"error": "Unauthorized"}), 403
+
+    db.session.delete(capsule)
+    db.session.commit()
+    return jsonify({"message": "Capsule deleted successfully"}), 200
+
 
 #  start app
 if __name__ == '__main__':
