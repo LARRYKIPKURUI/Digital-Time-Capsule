@@ -12,6 +12,7 @@ sqlalchemy-serializer = "*"
 sqlalchemy = "*"
 flask-migrate = "*"
 python-dotenv = "*"
+flask-mail = "*"
 
 [dev-packages]
 
