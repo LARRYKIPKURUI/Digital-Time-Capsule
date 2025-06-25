@@ -44,7 +44,8 @@ def register():
     db.session.add(new_user)
     db.session.commit()
 
-    return jsonify(new_user.serialize()), 201
+    return jsonify(new_user.to_dict()), 201
+
 
 
 @app.route('/login', methods=['POST'])
@@ -60,7 +61,8 @@ def login():
 
     return jsonify({
         "message": "Login successful",
-        "user": user.serialize()
+        "user": user.to_dict()
+
     }), 200
 
 # Capsule Routes
@@ -88,13 +90,12 @@ def create_capsule():
     db.session.add(capsule)
     db.session.commit()
 
-    return jsonify(capsule.serialize()), 201
-
+    return jsonify(capsule.to_dict()), 201
 
 @app.route('/capsules/<int:user_id>', methods=['GET'])
 def get_user_capsules(user_id):
     capsules = Capsule.query.filter_by(user_id=user_id).all()
-    return jsonify([c.serialize() for c in capsules]), 200
+    return jsonify([c.to_dict() for c in capsules]), 200
 
 
 @app.route('/capsule/<int:id>', methods=['GET'])
@@ -107,7 +108,7 @@ def view_capsule(id):
     if capsule.unlock_date > datetime.now():
         return jsonify({"message": "Capsule is still locked"}), 403
 
-    return jsonify(capsule.serialize()), 200
+    return jsonify(capsule.to_dict()), 200
 
 
 
