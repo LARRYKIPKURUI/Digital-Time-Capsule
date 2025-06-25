@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
 import Swal from "sweetalert2";
-import { motion } from "framer-motion";
+import { motion as MotionDiv } from "framer-motion";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function LoginPage() {
@@ -46,7 +46,7 @@ function LoginPage() {
     }
 
     try {
-      const response = await fetch("/api/login", { //Mock Backend Endpoint to hold as placeholder
+      const response = await fetch("http://localhost:5555/login", { //Mock Backend Endpoint to hold as placeholder
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -75,7 +75,7 @@ function LoginPage() {
     <Container fluid className="d-flex align-items-center justify-content-center bg-light" style={{ minHeight: "100vh" }}>
       <Row className="w-100 justify-content-center">
         <Col xs={11} sm={9} md={6} lg={4}>
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -141,7 +141,7 @@ function LoginPage() {
                 </small>
               </Card.Footer>
             </Card>
-          </motion.div>
+          </MotionDiv>
         </Col>
       </Row>
     </Container>
