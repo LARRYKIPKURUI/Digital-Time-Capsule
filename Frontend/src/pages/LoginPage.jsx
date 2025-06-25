@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
 import Swal from "sweetalert2";
@@ -54,8 +54,12 @@ function LoginPage() {
       });
 
       if (response.ok) {
-        await response.json();
-        // localStorage.setItem("token", data.token);
+        const data = await response.json(); 
+        localStorage.setItem("token", data.token); //  store JWT token on local storage
+
+        // Optionally store user info too
+        localStorage.setItem("user", JSON.stringify(data.user));
+
         showSuccess("Welcome back!");
         setTimeout(() => navigate("/dashboard"), 1600);
       } else {

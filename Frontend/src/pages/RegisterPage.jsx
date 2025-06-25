@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 import Swal from "sweetalert2";
@@ -71,10 +71,13 @@ const RegisterPage = () => {
       if (response.status === 201) {
         showSuccess("Your account has been created!");
 
-        //  Reset the form
+        // Save token
+        localStorage.setItem("token", resData.token); 
+
+        // Reset the form
         setFormData({ username: "", email: "", password: "" });
 
-        // Navigate after alert
+        // Navigate to capsule page or dashboard directly if already logged in
         setTimeout(() => navigate("/login"), 1600);
       } else {
         showError(resData.error || "Registration failed.");
