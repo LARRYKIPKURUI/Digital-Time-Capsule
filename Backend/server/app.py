@@ -30,7 +30,6 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)
 # Init extensions
 db.init_app(app)
 migrate = Migrate(app, db)
-bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
 
@@ -53,7 +52,7 @@ def register():
     if User.query.filter_by(email=email).first():
         return jsonify({"error": "Email already exists"}), 400
 
-    hashed_pw = bcrypt.generate_password_hash(password).decode('utf-8')
+    hashed_pw = generate_password_hash(password)
     user = User(username=username, email=email, password_hash=hashed_pw)
 
 
