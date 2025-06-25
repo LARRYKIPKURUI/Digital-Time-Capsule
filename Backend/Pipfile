@@ -10,6 +10,8 @@ datetime = "*"
 flask-sqlalchemy = "*"
 sqlalchemy-serializer = "*"
 sqlalchemy = "*"
+flask-migrate = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

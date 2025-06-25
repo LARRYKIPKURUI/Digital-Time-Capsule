@@ -9,3 +9,6 @@ __pycache__/
 
 #  dotenv files
 .venv
+
+# Env var
+.env
