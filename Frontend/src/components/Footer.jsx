@@ -27,8 +27,8 @@ function Footer() {
             <Nav className="flex-column">
               <Nav.Link as={Link} to="/" className="text-white-50 py-1">Home</Nav.Link>
               <Nav.Link as={Link} to="/about" className="text-white-50 py-1">About Us</Nav.Link>
-              <Nav.Link as={Link} to="/pricing" className="text-white-50 py-1">Pricing</Nav.Link>
-              <Nav.Link as={Link} to="/faq" className="text-white-50 py-1">FAQ</Nav.Link>
+              <Nav.Link as={Link} to="/about" className="text-white-50 py-1">Why DTC</Nav.Link>
+              <Nav.Link as={Link} to="/" className="text-white-50 py-1">How it Works</Nav.Link>
             </Nav>
           </Col>
 
@@ -38,7 +38,7 @@ function Footer() {
             <Nav className="flex-column">
               <Nav.Link as={Link} to="/new" className="text-white-50 py-1">Create New Capsule</Nav.Link>
               <Nav.Link as={Link} to="/capsules" className="text-white-50 py-1">View My Capsules</Nav.Link>
-              <Nav.Link as={Link} to="/community-capsules" className="text-white-50 py-1">Community Capsules</Nav.Link>
+              <Nav.Link as={Link} to="/" className="text-white-50 py-1">What is DTC ?</Nav.Link>
             </Nav>
           </Col>
 

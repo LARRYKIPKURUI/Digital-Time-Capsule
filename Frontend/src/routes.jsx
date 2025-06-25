@@ -6,6 +6,7 @@ import ViewCapsule from "./pages/ViewCapsule";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import PrivateRoute from "./components/PrivateRoute";
+import ListCapsulesPage from "./pages/ListCapsulesPage";
 
 function AppRoutes({ setIsLoggedIn }) {
 
@@ -33,6 +34,14 @@ function AppRoutes({ setIsLoggedIn }) {
         element={
           <PrivateRoute>
             <ViewCapsule />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/capsules"
+        element={
+          <PrivateRoute>
+            <ListCapsulesPage/>
           </PrivateRoute>
         }
       />

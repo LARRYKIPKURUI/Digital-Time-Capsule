@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Card, Button, Alert, Spinner } from 'react-bootstrap';
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Container, Card, Button, Spinner } from "react-bootstrap";
+import Swal from "sweetalert2";
 
 function ViewCapsule() {
   const { id } = useParams();
@@ -8,40 +9,53 @@ function ViewCapsule() {
 
   const [capsule, setCapsule] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [notFound, setNotFound] = useState(false);
-
-// Endpoint should return json like the below format and return 404 for missing capsules application/json on success
-// {
-//   "id": "2",
-//   "title": "Memories of 2024",
-//   "message": "This year was wild...",
-//   "unlock_date": "2024-06-21",
-//   "image_url": "https://example.com/image.jpg"
-// }
-
 
   useEffect(() => {
     const fetchCapsule = async () => {
       try {
-        const response = await fetch(`/api/capsules/${id}`); //To Replace with Real Backend Endpoint
+        const response = await fetch(`http://localhost:5555/capsule/${id}`);
+
+        if (response.status === 404) {
+          Swal.fire({
+            icon: "error",
+            title: "Not Found",
+            text: "Capsule not found!",
+            confirmButtonColor: "#dc3545",
+          }).then(() => navigate("/capsules"));
+          return;
+        }
+
+        if (response.status === 403) {
+          Swal.fire({
+            icon: "warning",
+            title: "Capsule Locked",
+            text: "This capsule is still sealed. Come back after the unlock date.",
+            confirmButtonColor: "#ffc107",
+          }).then(() => navigate("/capsules"));
+          return;
+        }
+
         if (response.ok) {
           const data = await response.json();
           setCapsule(data);
-        } else if (response.status === 404) {
-          setNotFound(true);
         } else {
-          throw new Error('Failed to fetch capsule');
+          throw new Error("Failed to fetch capsule");
         }
       } catch (err) {
-        console.error('Error fetching capsule:', err);
-        setNotFound(true);
+        console.error("Error fetching capsule:", err);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Something went wrong while loading the capsule.",
+          confirmButtonColor: "#dc3545",
+        }).then(() => navigate("/capsules"));
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchCapsule();
-  }, [id]);
+  }, [id, navigate]);
 
   if (isLoading) {
     return (
@@ -52,16 +66,7 @@ function ViewCapsule() {
     );
   }
 
-  if (notFound || !capsule) {
-    return (
-      <Container className="text-center my-5">
-        <Alert variant="danger">Capsule not found!</Alert>
-        <Button variant="secondary" onClick={() => navigate('/')}>
-          Back to Home Page 
-        </Button>
-      </Container>
-    );
-  }
+  if (!capsule) return null; // Nothing more to render if it’s handled by Swal
 
   const isLocked = new Date(capsule.unlock_date) > new Date();
 
@@ -69,10 +74,10 @@ function ViewCapsule() {
     <Container className="my-5">
       <Button
         variant="outline-secondary"
-        onClick={() => navigate('/')}
+        onClick={() => navigate("/capsules")}
         className="mb-4"
       >
-        &larr; Back to all Capsules
+        &larr; Back to My Capsules
       </Button>
 
       <Card>
@@ -81,8 +86,8 @@ function ViewCapsule() {
           className="d-flex justify-content-between align-items-center"
         >
           {capsule.title}
-          <span className={`badge ${isLocked ? 'bg-secondary' : 'bg-success'}`}>
-            {isLocked ? 'Locked' : 'Unlocked'}
+          <span className={`badge ${isLocked ? "bg-secondary" : "bg-success"}`}>
+            {isLocked ? "Locked" : "Unlocked"}
           </span>
         </Card.Header>
 
@@ -91,22 +96,14 @@ function ViewCapsule() {
             Unlock Date: {new Date(capsule.unlock_date).toLocaleDateString()}
           </Card.Text>
 
-          {isLocked ? (
-            <Alert variant="warning" className="text-center">
-              This capsule is currently sealed. It will unlock on{' '}
-              {new Date(capsule.unlock_date).toLocaleDateString()}.
-            </Alert>
-          ) : (
-            <>
-              <Card.Text>{capsule.message}</Card.Text>
-              {capsule.image_url && (
-                <img
-                  src={capsule.image_url}
-                  alt={capsule.title}
-                  className="img-fluid rounded mt-3"
-                />
-              )}
-            </>
+          <Card.Text>{capsule.message}</Card.Text>
+
+          {capsule.media_url && (
+            <img
+              src={capsule.media_url}
+              alt={capsule.title}
+              className="img-fluid rounded mt-3"
+            />
           )}
         </Card.Body>
       </Card>

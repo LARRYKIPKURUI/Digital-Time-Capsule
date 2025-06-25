@@ -1,4 +1,4 @@
-import { useState } from "react";
+import  { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Card, Form, Button, Row, Col } from "react-bootstrap";
 import Swal from "sweetalert2";
@@ -8,7 +8,7 @@ function CreateCapsulePage() {
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [unlockDate, setUnlockDate] = useState("");
-  const [mediaURL, setMediaURL] = useState(""); // renamed from imageURL
+  const [mediaURL, setMediaURL] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const showError = (msg) => {
@@ -63,7 +63,7 @@ function CreateCapsulePage() {
       title,
       message,
       unlock_date: unlockDate,
-      media_url: mediaURL || null, // ensure it aligns with backend naming
+      media_url: mediaURL || null,
     };
 
     try {
@@ -139,7 +139,7 @@ function CreateCapsulePage() {
                   />
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="capsuleMedia">
+                <Form.Group className="mb-3" controlId="capsuleImage">
                   <Form.Label className="fw-semibold text-primary">
                     Add a Link to Your Picture
                   </Form.Label>

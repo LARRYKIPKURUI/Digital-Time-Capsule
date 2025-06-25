@@ -7,8 +7,8 @@ function CustomNavbar({ isLoggedIn, onLogout }) {
 
   const isActive = (path) =>
     location.pathname === path
-      ? "text-primary fw-bold text-underline fs-5 font-monospace"
-      : "text-white px-3 fw-semibold fs-5";
+      ? "text-primary  text-underline fs-5 font-monospace"
+      : "text-white px-3  fs-5";
 
   return (
     <Navbar
@@ -44,7 +44,7 @@ function CustomNavbar({ isLoggedIn, onLogout }) {
             <Nav.Link as={Link} to="/new" className={isActive("/new")}>
               Create Capsule
             </Nav.Link>
-            <Nav.Link as={Link} to="/capsule" className={isActive("/capsule")}>
+            <Nav.Link as={Link} to="/capsules" className={isActive("/capsules")}>
               List Capsules
             </Nav.Link>
 
