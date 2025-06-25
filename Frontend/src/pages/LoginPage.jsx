@@ -4,7 +4,7 @@ import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-function LoginPage() {
+function LoginPage({ setIsLoggedIn}) {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,49 +30,50 @@ function LoginPage() {
     });
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+ const handleLogin = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
 
-    if (!email.trim() || !password.trim()) {
-      setIsLoading(false);
-      return showError("Please enter both your email and password.");
+  if (!email.trim() || !password.trim()) {
+    setIsLoading(false);
+    return showError("Please enter both your email and password.");
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    setIsLoading(false);
+    return showError("Please enter a valid email address.");
+  }
+
+  try {
+    const response = await fetch("http://localhost:5555/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json(); //  Define 'data' here
+
+    if (response.ok) {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      setIsLoggedIn(true); //  Make sure you're receiving this as a prop
+
+      showSuccess("Welcome back!");
+      setTimeout(() => navigate("/dashboard"), 1500); // or navigate somewhere appropriate
+    } else {
+      showError(data.error || "Invalid email or password.");
     }
+  } catch (err) {
+    console.error("Login error:", err);
+    showError("Something went wrong. Please try again later.");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setIsLoading(false);
-      return showError("Please enter a valid email address.");
-    }
-
-    try {
-      const response = await fetch("http://localhost:5555/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (response.ok) {
-        const data = await response.json(); 
-        localStorage.setItem("token", data.token); //  store JWT token on local storage
-
-        // Optionally store user info too
-        localStorage.setItem("user", JSON.stringify(data.user));
-
-        showSuccess("Welcome back!");
-        setTimeout(() => navigate("/dashboard"), 1600);
-      } else {
-        const errData = await response.json();
-        showError(errData.error || "Invalid email or password.");
-      }
-    } catch (err) {
-      console.error("Login error:", err);
-      showError("Something went wrong. Please try again later.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <Container

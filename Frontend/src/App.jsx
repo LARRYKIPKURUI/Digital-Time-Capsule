@@ -1,17 +1,34 @@
-import NavBar from './components/NavBar'
-import Footer from './components/Footer'
-import AppRoutes from './routes'
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import NavBar from './components/NavBar';
+import Footer from './components/Footer';
+import AppRoutes from './routes';
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setIsLoggedIn(false);
+    navigate("/login");
+  };
+
   return (
     <>
-      <NavBar />
+      <NavBar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
       <div className="p-4">
-        <AppRoutes />
+        <AppRoutes setIsLoggedIn={setIsLoggedIn} />
       </div>
       <Footer />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,22 +1,43 @@
-import { Routes, Route } from 'react-router-dom'
-import Home from './pages/Home'
-import About from './pages/About'
-import NewCapsule from './pages/NewCapsule'
-import ViewCapsule from './pages/ViewCapsule'
-import RegisterPage from './pages/RegisterPage'
-import LoginPage from './pages/LoginPage'
+import { Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import NewCapsule from "./pages/NewCapsule";
+import ViewCapsule from "./pages/ViewCapsule";
+import RegisterPage from "./pages/RegisterPage";
+import LoginPage from "./pages/LoginPage";
+import PrivateRoute from "./components/PrivateRoute";
 
-function AppRoutes() {
+function AppRoutes({ setIsLoggedIn }) {
+
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/register" element={<RegisterPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/new" element={<NewCapsule />} />
-      <Route path="/capsule/:id" element={<ViewCapsule />} />
+      <Route
+        path="/login"
+        element={<LoginPage setIsLoggedIn={setIsLoggedIn} />}
+      />
+
+      {/* Protected Routes */}
+      <Route
+        path="/new"
+        element={
+          <PrivateRoute>
+            <NewCapsule />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/capsule/:id"
+        element={
+          <PrivateRoute>
+            <ViewCapsule />
+          </PrivateRoute>
+        }
+      />
     </Routes>
-  )
+  );
 }
 
-export default AppRoutes
+export default AppRoutes;
