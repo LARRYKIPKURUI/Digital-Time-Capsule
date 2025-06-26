@@ -12,6 +12,9 @@ from dotenv import load_dotenv
 from flask_migrate import Migrate
 from datetime import datetime, timedelta
 from flask_mail import Mail, Message
+from apscheduler.schedulers.background import BackgroundScheduler
+import atexit
+
 
 # Models
 from models import db, User, Capsule, EmailReminder
@@ -59,24 +62,6 @@ def send_capsule_email(to_email, capsule_title, unlock_date):
 @app.route('/')
 def home():
     return jsonify({"message": "Digital Time Capsule API running"}), 200
-
-#Email Reminders
-@app.route('/send_reminders', methods=['GET'])
-def send_reminders():
-    now = datetime.now()
-    reminders = EmailReminder.query.filter(
-        EmailReminder.sent == False,
-        EmailReminder.scheduled_for <= now
-    ).all()
-
-    for reminder in reminders:
-        capsule = Capsule.query.get(reminder.capsule_id)
-        if capsule:
-            send_capsule_email(reminder.email, capsule.title, capsule.unlock_date)
-            reminder.sent = True
-            db.session.commit()
-
-    return jsonify({"message": f"{len(reminders)} reminders processed."}), 200
 
 
 # Register
@@ -264,7 +249,45 @@ def delete_capsule(id):
     db.session.commit()
     return jsonify({"message": "Capsule deleted successfully"}), 200
 
+#Checking and sending reminders
+def check_and_send_reminders():
+    with app.app_context():  # <---- FIXED HERE
+        now = datetime.now()
+        due_reminders = EmailReminder.query.filter(
+            EmailReminder.scheduled_for <= now,
+            EmailReminder.sent == False
+        ).all()
 
+        for reminder in due_reminders:
+            capsule = Capsule.query.get(reminder.capsule_id)
+            if capsule:
+                try:
+                    msg = Message(
+                        subject="Your Time Capsule is Unlocked 🎉",
+                        recipients=[reminder.email],
+                        body=(
+                            f"Hi,\n\nYour time capsule titled '{capsule.title}' "
+                            f"scheduled for {capsule.unlock_date.strftime('%Y-%m-%d')} is now unlocked!\n"
+                            "Visit your List Capsules Page to read it.\n\nCheers!"
+                        )
+                    )
+                    mail.send(msg)
+                    reminder.sent = True
+                    db.session.commit()
+                    print(f"✅ Sent reminder to {reminder.email}")
+                except Exception as e:
+                    print(f"❌ Failed to send email to {reminder.email}: {e}")
+
+  
+
+# Schedule the job
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=check_and_send_reminders, trigger="interval", minutes=1)
+scheduler.start()
+
+
+
+atexit.register(lambda: scheduler.shutdown())
 #  start app
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

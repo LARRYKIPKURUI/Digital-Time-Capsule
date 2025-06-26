@@ -16,6 +16,7 @@ flask-cors = "*"
 bcrypt = "*"
 python-dotenv = "*"
 flask-mail = "*"
+apscheduler = "*"
 
 [dev-packages]
 
