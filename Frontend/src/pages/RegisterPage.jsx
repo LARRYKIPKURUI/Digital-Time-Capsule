@@ -66,7 +66,7 @@ const RegisterPage = () => {
         body: JSON.stringify(formData),
       });
 
-      const resData = await response.json(); // must come before checking status again
+      const resData = await response.json(); 
 
       if (response.status === 201) {
         showSuccess("Your account has been created!");
@@ -77,7 +77,7 @@ const RegisterPage = () => {
         // Reset the form
         setFormData({ username: "", email: "", password: "" });
 
-        // Navigate to capsule page or dashboard directly if already logged in
+        // Navigate to login after sign up
         setTimeout(() => navigate("/login"), 1600);
       } else {
         showError(resData.error || "Registration failed.");

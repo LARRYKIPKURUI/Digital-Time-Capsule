@@ -26,8 +26,6 @@ useEffect(() => {
     try {
       const token = localStorage.getItem("token");
 
-      //  AUTHENTICATED GET request to /capsules/:id
-      // This is the private route that allows owners to view (even if locked)
       const res = await fetch(`http://localhost:5555/capsules/${id}`, {
         method: "GET", 
         headers: {
@@ -50,7 +48,7 @@ useEffect(() => {
       Swal.fire("Error", "Failed to load capsule.", "error");
       navigate("/capsules");
     } finally {
-      setIsLoading(false); //  Prevent endless spinner
+      setIsLoading(false); 
     }
   };
 
@@ -63,8 +61,6 @@ const handleUpdate = async (e) => {
   try {
     const token = localStorage.getItem("token");
 
-    // PATCH to /capsules/:id — to be used for updating capsule data
-    // Must include JWT token for ownership/auth checks
     const res = await fetch(`http://localhost:5555/capsules/${id}`, {
       method: "PATCH",
       headers: {

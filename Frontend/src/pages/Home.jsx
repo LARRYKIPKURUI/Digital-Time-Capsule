@@ -143,7 +143,7 @@ function Home() {
                     src={unlockingDay}
                     alt="Calendar or delivery visual"
                     className="img-fluid rounded"
-                    // style={{ maxHeight: "120px" }}
+                    
                   />
                 </div>
               </Card.Body>
