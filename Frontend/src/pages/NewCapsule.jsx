@@ -9,7 +9,7 @@ function CreateCapsulePage() {
   const [message, setMessage] = useState("");
   const [unlockDate, setUnlockDate] = useState("");
   const [mediaURL, setMediaURL] = useState("");
-  const [reminderEmail, setReminderEmail] = useState(""); 
+  const [reminderEmail, setReminderEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const showError = (msg) => {
@@ -47,17 +47,15 @@ function CreateCapsulePage() {
 
     if (!unlockDate) {
       setIsLoading(false);
-      return showError("Please select an Unlock Date.");
+      return showError("Please select an Unlock Date & Time.");
     }
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
     const selectedDate = new Date(unlockDate);
-    selectedDate.setHours(0, 0, 0, 0);
+    const now = new Date();
 
-    if (selectedDate <= today) {
+    if (selectedDate <= now) {
       setIsLoading(false);
-      return showError("Unlock Date must be in the future.");
+      return showError("Unlock Date & Time must be in the future.");
     }
 
     const payload = {
@@ -67,7 +65,6 @@ function CreateCapsulePage() {
       media_url: mediaURL || null,
     };
 
-    //  Add optional email to payload only if it's filled
     if (reminderEmail.trim()) {
       payload.reminder_email = reminderEmail.trim();
     }
@@ -109,7 +106,7 @@ function CreateCapsulePage() {
             <h2 className="fw-bold">Create a New Time Capsule</h2>
             <p className="text-muted p-3">
               Write a message to your future self. It will be sealed until the
-              date you choose.
+              date and time you choose.
             </p>
           </div>
 
@@ -161,10 +158,10 @@ function CreateCapsulePage() {
 
                 <Form.Group className="mb-3" controlId="unlockDate">
                   <Form.Label className="fw-semibold text-primary">
-                    Unlock Date
+                    Unlock Date & Time
                   </Form.Label>
                   <Form.Control
-                    type="date"
+                    type="datetime-local"
                     value={unlockDate}
                     onChange={(e) => setUnlockDate(e.target.value)}
                     disabled={isLoading}
@@ -172,14 +169,13 @@ function CreateCapsulePage() {
                   />
                 </Form.Group>
 
-                {/*  New  Email Reminder Field */}
                 <Form.Group className="mb-4" controlId="reminderEmail">
                   <Form.Label className="fw-semibold text-primary">
-                    Reminder Email 
+                    Reminder Email
                   </Form.Label>
                   <Form.Control
                     type="email"
-                    placeholder="Enter recipient email"
+                    placeholder="Enter recipient email (optional)"
                     value={reminderEmail}
                     onChange={(e) => setReminderEmail(e.target.value)}
                     disabled={isLoading}
