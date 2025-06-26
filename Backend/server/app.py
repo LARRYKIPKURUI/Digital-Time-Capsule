@@ -11,6 +11,7 @@ import os
 from dotenv import load_dotenv
 from flask_migrate import Migrate
 from datetime import datetime, timedelta
+from flask_mail import Mail, Message
 
 # Models
 from models import db, User, Capsule, EmailReminder
@@ -27,15 +28,55 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)
 
+# Email config (use .env for safety)
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
+app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv("MAIL_USERNAME")
+
+
 # Init extensions
 db.init_app(app)
 migrate = Migrate(app, db)
 jwt = JWTManager(app)
+mail = Mail(app)
+
+def send_capsule_email(to_email, capsule_title, unlock_date):
+    msg = Message(
+        subject="Your Time Capsule is Unlocked 🎉",
+        recipients=[to_email],
+        body=(
+            f"Hi,\n\nYour time capsule titled '{capsule_title}' "
+            f"scheduled for {unlock_date.strftime('%Y-%m-%d')} is now unlocked!\n"
+            "Visit your List Capsules Page to see it and  to read it.\n\nCheers!"
+        )
+    )
+    mail.send(msg)
 
 
 @app.route('/')
 def home():
     return jsonify({"message": "Digital Time Capsule API running"}), 200
+
+#Email Reminders
+@app.route('/send_reminders', methods=['GET'])
+def send_reminders():
+    now = datetime.now()
+    reminders = EmailReminder.query.filter(
+        EmailReminder.sent == False,
+        EmailReminder.scheduled_for <= now
+    ).all()
+
+    for reminder in reminders:
+        capsule = Capsule.query.get(reminder.capsule_id)
+        if capsule:
+            send_capsule_email(reminder.email, capsule.title, capsule.unlock_date)
+            reminder.sent = True
+            db.session.commit()
+
+    return jsonify({"message": f"{len(reminders)} reminders processed."}), 200
 
 
 # Register
@@ -95,7 +136,7 @@ def login():
 
 
 
-# Create Capsule
+# Create Capsule + Optional Email Reminder
 @app.route('/capsules', methods=['POST'])
 @jwt_required()
 def create_capsule():
@@ -104,22 +145,40 @@ def create_capsule():
     message = data.get('message')
     unlock_date = data.get('unlock_date')
     media_url = data.get('media_url')
+    reminder_email = data.get('reminder_email')  # optional
 
-    user_id = get_jwt_identity()  # Extract from JWT token
+    user_id = get_jwt_identity()
 
     if not all([title, message, unlock_date]):
         return jsonify({"error": "Missing required fields"}), 400
 
+    try:
+        unlock_datetime = datetime.fromisoformat(unlock_date)
+    except ValueError:
+        return jsonify({"error": "Invalid date format"}), 400
+
+    # Create capsule
     capsule = Capsule(
         title=title,
         message=message,
-        unlock_date=datetime.fromisoformat(unlock_date),
+        unlock_date=unlock_datetime,
         media_url=media_url,
         user_id=user_id
     )
 
     db.session.add(capsule)
     db.session.commit()
+
+    # Optionally create an email reminder
+    if reminder_email:
+        reminder = EmailReminder(
+            capsule_id=capsule.id,
+            email=reminder_email,
+            scheduled_for=unlock_datetime,
+            sent=False
+        )
+        db.session.add(reminder)
+        db.session.commit()
 
     return jsonify(capsule.to_dict()), 201
 
