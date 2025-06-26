@@ -8,7 +8,8 @@ function CreateCapsulePage() {
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [unlockDate, setUnlockDate] = useState("");
-  const [mediaURL, setMediaURL] = useState(""); // renamed from imageURL
+  const [mediaURL, setMediaURL] = useState("");
+  const [reminderEmail, setReminderEmail] = useState(""); 
   const [isLoading, setIsLoading] = useState(false);
 
   const showError = (msg) => {
@@ -63,8 +64,13 @@ function CreateCapsulePage() {
       title,
       message,
       unlock_date: unlockDate,
-      media_url: mediaURL || null, // ensure it aligns with backend naming
+      media_url: mediaURL || null,
     };
+
+    //  Add optional email to payload only if it's filled
+    if (reminderEmail.trim()) {
+      payload.reminder_email = reminderEmail.trim();
+    }
 
     try {
       const token = localStorage.getItem("token");
@@ -153,7 +159,7 @@ function CreateCapsulePage() {
                   />
                 </Form.Group>
 
-                <Form.Group className="mb-4" controlId="unlockDate">
+                <Form.Group className="mb-3" controlId="unlockDate">
                   <Form.Label className="fw-semibold text-primary">
                     Unlock Date
                   </Form.Label>
@@ -161,6 +167,21 @@ function CreateCapsulePage() {
                     type="date"
                     value={unlockDate}
                     onChange={(e) => setUnlockDate(e.target.value)}
+                    disabled={isLoading}
+                    className="rounded-3"
+                  />
+                </Form.Group>
+
+                {/*  New  Email Reminder Field */}
+                <Form.Group className="mb-4" controlId="reminderEmail">
+                  <Form.Label className="fw-semibold text-primary">
+                    Reminder Email 
+                  </Form.Label>
+                  <Form.Control
+                    type="email"
+                    placeholder="Enter recipient email"
+                    value={reminderEmail}
+                    onChange={(e) => setReminderEmail(e.target.value)}
                     disabled={isLoading}
                     className="rounded-3"
                   />

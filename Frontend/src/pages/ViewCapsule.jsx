@@ -66,7 +66,7 @@ function ViewCapsule() {
     );
   }
 
-  if (!capsule) return null; // Nothing more to render if it’s handled by Swal
+  if (!capsule) return null; 
 
   const isLocked = new Date(capsule.unlock_date) > new Date();
 

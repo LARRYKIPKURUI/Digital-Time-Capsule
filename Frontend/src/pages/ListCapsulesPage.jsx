@@ -134,14 +134,14 @@ function ListCapsulesPage() {
                     >
                       View
                     </Button>
-                    <Button
+                    {/* <Button
                       variant="outline-warning"
                       size="sm"
                       className="btn btn-warning text-dark fw-bold"
                       onClick={() => navigate(`/capsules/edit/${capsule.id}`)}
                     >
                       Edit
-                    </Button>
+                    </Button> */}
                     <Button
                       variant="outline-danger"
                       size="sm"
