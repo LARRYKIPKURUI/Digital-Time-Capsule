@@ -89,7 +89,7 @@ with app.app_context():
         capsule_id=capsule5.id,
         email='mike@example.com',
         scheduled_for=capsule5.unlock_date,
-        sent=True  # Pretending already sent
+        sent=True  # mocking sent remminder
     )
 
     db.session.add_all([reminder1, reminder2, reminder3])

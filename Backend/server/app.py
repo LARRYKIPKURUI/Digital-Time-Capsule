@@ -130,7 +130,7 @@ def create_capsule():
     message = data.get('message')
     unlock_date = data.get('unlock_date')
     media_url = data.get('media_url')
-    reminder_email = data.get('reminder_email')  # optional
+    reminder_email = data.get('reminder_email') 
 
     user_id = get_jwt_identity()
 
@@ -251,7 +251,7 @@ def delete_capsule(id):
 
 #Checking and sending reminders
 def check_and_send_reminders():
-    with app.app_context():  # <---- FIXED HERE
+    with app.app_context():  
         now = datetime.now()
         due_reminders = EmailReminder.query.filter(
             EmailReminder.scheduled_for <= now,
@@ -274,9 +274,9 @@ def check_and_send_reminders():
                     mail.send(msg)
                     reminder.sent = True
                     db.session.commit()
-                    print(f"✅ Sent reminder to {reminder.email}")
+                    print(f" Sent reminder to {reminder.email}")
                 except Exception as e:
-                    print(f"❌ Failed to send email to {reminder.email}: {e}")
+                    print(f" Failed to send email to {reminder.email}: {e}")
 
   
 
