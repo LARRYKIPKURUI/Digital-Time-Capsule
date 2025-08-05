@@ -14,6 +14,8 @@ from datetime import datetime, timedelta
 from flask_mail import Mail, Message
 from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
+import cloudinary
+import cloudinary.uploader
 
 
 # Models
@@ -25,7 +27,7 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-# Config
+# DB Config
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///capsule.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
@@ -39,6 +41,13 @@ app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
 app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
 app.config['MAIL_DEFAULT_SENDER'] = os.getenv("MAIL_USERNAME")
 
+#Cloudinary Config
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+    secure=True
+)
 
 # Init extensions
 db.init_app(app)
@@ -119,28 +128,33 @@ def login():
         "user": user.to_dict()
     }), 200
 
-
-
-# Create Capsule + Optional Email Reminder
+#Sending capsule
 @app.route('/capsules', methods=['POST'])
 @jwt_required()
 def create_capsule():
-    data = request.get_json()
-    title = data.get('title')
-    message = data.get('message')
-    unlock_date = data.get('unlock_date')
-    media_url = data.get('media_url')
-    reminder_email = data.get('reminder_email') 
+    # Expect multipart/form-data
+    title = request.form.get('title')
+    message = request.form.get('message')
+    unlock_date = request.form.get('unlock_date')
+    reminder_email = request.form.get('reminder_email')
+    image_file = request.files.get('image')  # file part
 
     user_id = get_jwt_identity()
 
-    if not all([title, message, unlock_date]):
+    if not all([title, message, unlock_date, image_file]):
         return jsonify({"error": "Missing required fields"}), 400
 
     try:
         unlock_datetime = datetime.fromisoformat(unlock_date)
     except ValueError:
         return jsonify({"error": "Invalid date format"}), 400
+
+    # Upload image to Cloudinary
+    try:
+        upload_result = cloudinary.uploader.upload(image_file)
+        media_url = upload_result['secure_url']
+    except Exception as e:
+        return jsonify({"error": "Image upload failed", "details": str(e)}), 500
 
     # Create capsule
     capsule = Capsule(
@@ -154,7 +168,7 @@ def create_capsule():
     db.session.add(capsule)
     db.session.commit()
 
-    # Optionally create an email reminder
+    # Create an email reminder
     if reminder_email:
         reminder = EmailReminder(
             capsule_id=capsule.id,
@@ -277,8 +291,6 @@ def check_and_send_reminders():
                     print(f" Sent reminder to {reminder.email}")
                 except Exception as e:
                     print(f" Failed to send email to {reminder.email}: {e}")
-
-  
 
 # Schedule the job
 scheduler = BackgroundScheduler()

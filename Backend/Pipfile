@@ -17,6 +17,7 @@ bcrypt = "*"
 python-dotenv = "*"
 flask-mail = "*"
 apscheduler = "*"
+cloudinary = "*"
 
 [dev-packages]
 

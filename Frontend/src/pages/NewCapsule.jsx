@@ -8,7 +8,7 @@ function CreateCapsulePage() {
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [unlockDate, setUnlockDate] = useState("");
-  const [mediaURL, setMediaURL] = useState("");
+  const [mediaFile, setMediaFile] = useState(null); //  File object
   const [reminderEmail, setReminderEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -35,50 +35,33 @@ function CreateCapsulePage() {
     e.preventDefault();
     setIsLoading(true);
 
-    if (!title.trim()) {
-      setIsLoading(false);
-      return showError("Capsule Title cannot be empty.");
-    }
-
-    if (!message.trim()) {
-      setIsLoading(false);
-      return showError("Your Message cannot be empty.");
-    }
-
-    if (!unlockDate) {
-      setIsLoading(false);
-      return showError("Please select an Unlock Date & Time.");
-    }
+    if (!title.trim()) return showError("Capsule Title cannot be empty.");
+    if (!message.trim()) return showError("Your Message cannot be empty.");
+    if (!unlockDate) return showError("Please select an Unlock Date & Time.");
 
     const selectedDate = new Date(unlockDate);
     const now = new Date();
-
-    if (selectedDate <= now) {
-      setIsLoading(false);
-      return showError("Unlock Date & Time must be in the future.");
-    }
-
-    const payload = {
-      title,
-      message,
-      unlock_date: unlockDate,
-      media_url: mediaURL || null,
-    };
-
-    if (reminderEmail.trim()) {
-      payload.reminder_email = reminderEmail.trim();
-    }
+    if (selectedDate <= now)
+      return showError("Unlock Date must be in the future.");
 
     try {
       const token = localStorage.getItem("token");
 
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("message", message);
+      formData.append("unlock_date", unlockDate);
+      formData.append("image", mediaFile); // file from input[type="file"]
+      if (reminderEmail.trim()) {
+        formData.append("reminder_email", reminderEmail.trim());
+      }
+
       const response = await fetch("http://localhost:5555/capsules", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(payload),
+        body: formData,
       });
 
       if (response.ok) {
@@ -90,9 +73,7 @@ function CreateCapsulePage() {
       }
     } catch (err) {
       console.error("Error creating capsule:", err);
-      showError(
-        err.message || "Something went wrong while creating the capsule."
-      );
+      showError(err.message || "Something went wrong.");
     } finally {
       setIsLoading(false);
     }
@@ -148,10 +129,9 @@ function CreateCapsulePage() {
                   </Form.Label>
                   <Form.Control
                     type="file"
-                    placeholder="Choose file "
-                    value={mediaURL}
-                    onChange={(e) => setMediaURL(e.target.value)}
+                    accept="image/*"
                     disabled={isLoading}
+                    onChange={(e) => setMediaFile(e.target.files[0])}
                     className="rounded-3"
                   />
                 </Form.Group>
