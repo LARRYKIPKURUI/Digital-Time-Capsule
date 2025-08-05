@@ -144,11 +144,11 @@ function CreateCapsulePage() {
 
                 <Form.Group className="mb-3" controlId="capsuleMedia">
                   <Form.Label className="fw-semibold text-primary">
-                    Add a Link to Your Picture
+                    Upload Capsule Media
                   </Form.Label>
                   <Form.Control
-                    type="text"
-                    placeholder="Paste image URL (e.g., https://example.com/photo.jpg)"
+                    type="file"
+                    placeholder="Choose file "
                     value={mediaURL}
                     onChange={(e) => setMediaURL(e.target.value)}
                     disabled={isLoading}
@@ -175,7 +175,7 @@ function CreateCapsulePage() {
                   </Form.Label>
                   <Form.Control
                     type="email"
-                    placeholder="Enter recipient email (optional)"
+                    placeholder="Enter recipient email "
                     value={reminderEmail}
                     onChange={(e) => setReminderEmail(e.target.value)}
                     disabled={isLoading}
