@@ -47,7 +47,13 @@ class Capsule(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     # One-to-one relationship
-    email_reminder = db.relationship('EmailReminder', backref='capsule', uselist=False)
+    email_reminder = db.relationship(
+    'EmailReminder',
+    backref=db.backref('capsule', passive_deletes=True),
+    cascade="all, delete-orphan",
+    uselist=False
+        )
+
 
     def __repr__(self):
         return f"<Capsule {self.title} by User {self.user_id}>"
@@ -59,8 +65,12 @@ class EmailReminder(db.Model, SerializerMixin):
     serialize_only = ('id', 'capsule_id', 'email', 'scheduled_for', 'sent')
 
     id = db.Column(db.Integer, primary_key=True)
-    capsule_id = db.Column(db.Integer, db.ForeignKey('capsules.id'), nullable=False, unique=True)
-    email = db.Column(db.String(120), nullable=False, index=True)
+    email = db.Column(db.String(120), nullable=False)
+    capsule_id = db.Column(
+        db.Integer, 
+        db.ForeignKey('capsules.id', ondelete='CASCADE'), 
+        nullable=False
+    )
     scheduled_for = db.Column(db.DateTime, nullable=False, index=True)
     sent = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
