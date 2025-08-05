@@ -84,8 +84,8 @@ function CreateCapsulePage() {
       <Row className="justify-content-center">
         <Col md={8} lg={6}>
           <div className="text-center mb-3">
-            <h2 className="fw-bold">Create a New Time Capsule</h2>
-            <p className="text-muted p-3">
+            <h2 className="fw-bold text-primary">Create a New Time Capsule</h2>
+            <p className="text-muted test-white p-3">
               Write a message to your future self. It will be sealed until the
               date and time you choose.
             </p>

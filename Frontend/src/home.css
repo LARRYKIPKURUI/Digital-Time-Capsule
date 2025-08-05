@@ -3,6 +3,7 @@
   min-height: calc(100vh - (var(--navbar-height, 70px) + var(--footer-height, 200px))); 
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 

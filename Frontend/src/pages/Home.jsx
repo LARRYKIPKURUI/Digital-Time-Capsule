@@ -66,7 +66,7 @@ function Home() {
             <Card
               bg="dark"
               text="white"
-              className="h-100 shadow-sm border-primary p-3"
+              className="h-100 shadow-sm text-white p-3"
             >
               <Card.Body>
                 <Card.Title className="h4 fw-bold text-primary">
@@ -100,7 +100,7 @@ function Home() {
             <Card
               bg="dark"
               text="white"
-              className="h-100 shadow-sm border-primary p-3"
+              className="h-100 shadow-sm  p-3"
             >
               <Card.Body>
                 <Card.Title className="h4 fw-bold text-primary">
@@ -127,7 +127,7 @@ function Home() {
             <Card
               bg="dark"
               text="white"
-              className="h-100 shadow-sm border-primary p-3"
+              className="h-100 shadow-sm  p-3"
             >
               <Card.Body>
                 <Card.Title className="h4 fw-bold text-primary">

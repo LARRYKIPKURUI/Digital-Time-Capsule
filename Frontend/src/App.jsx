@@ -23,7 +23,7 @@ function App() {
   return (
     <>
       <NavBar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
-      <div className="p-4">
+      <div className="p-4 bg-dark">
         <AppRoutes setIsLoggedIn={setIsLoggedIn} />
       </div>
       <Footer />
