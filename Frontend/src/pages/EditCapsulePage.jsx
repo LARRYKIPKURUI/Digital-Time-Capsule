@@ -11,6 +11,8 @@ import {
 } from "react-bootstrap";
 import Swal from "sweetalert2";
 
+const API_URL = import.meta.env.VITE_APP_API_URL;
+
 function EditCapsulePage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -26,7 +28,7 @@ useEffect(() => {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await fetch(`http://localhost:5555/capsules/${id}`, {
+      const res = await fetch(`${API_URL}/capsules/${id}`, {
         method: "GET", 
         headers: {
           "Content-Type": "application/json",

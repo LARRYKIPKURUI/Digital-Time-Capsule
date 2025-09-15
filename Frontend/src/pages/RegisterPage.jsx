@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+const API_URL = import.meta.env.VITE_APP_API_URL;
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ const RegisterPage = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5555/register", {
+      const response = await fetch(`${API_URL}/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

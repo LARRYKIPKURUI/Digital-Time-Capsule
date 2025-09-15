@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+const API_URL = import.meta.env.VITE_APP_API_URL;
 
 function LoginPage({ setIsLoggedIn}) {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ function LoginPage({ setIsLoggedIn}) {
   }
 
   try {
-    const response = await fetch("http://localhost:5555/login", {
+    const response = await fetch(`${API_URL}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

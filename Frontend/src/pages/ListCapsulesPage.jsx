@@ -10,6 +10,7 @@ import {
   Badge,
 } from "react-bootstrap";
 import Swal from "sweetalert2";
+const API_URL = import.meta.env.VITE_APP_API_URL;
 
 function ListCapsulesPage() {
   const [capsules, setCapsules] = useState([]);
@@ -22,7 +23,7 @@ function ListCapsulesPage() {
         const token = localStorage.getItem("token");
         const user = JSON.parse(localStorage.getItem("user"));
 
-        const response = await fetch(`http://localhost:5555/capsules/${user.id}`, {
+        const response = await fetch(`${API_URL}/capsules/${user.id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

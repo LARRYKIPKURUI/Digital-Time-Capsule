@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Container, Card, Button, Spinner } from "react-bootstrap";
 import Swal from "sweetalert2";
+const API_URL = import.meta.env.VITE_APP_API_URL;
 
 function ViewCapsule() {
   const { id } = useParams();
@@ -13,7 +14,7 @@ function ViewCapsule() {
   useEffect(() => {
     const fetchCapsule = async () => {
       try {
-        const response = await fetch(`http://localhost:5555/capsule/${id}`);
+        const response = await fetch(`${API_URL}/capsule/${id}`);
 
         if (response.status === 404) {
           Swal.fire({

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Card, Form, Button, Row, Col } from "react-bootstrap";
 import Swal from "sweetalert2";
+const API_URL = import.meta.env.VITE_APP_API_URL;
 
 function CreateCapsulePage() {
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ function CreateCapsulePage() {
         formData.append("reminder_email", reminderEmail.trim());
       }
 
-      const response = await fetch("http://localhost:5555/capsules", {
+      const response = await fetch(`${API_URL}/capsules`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
