@@ -10,6 +10,7 @@ import {
   Badge,
 } from "react-bootstrap";
 import Swal from "sweetalert2";
+import { motion } from "framer-motion";
 const API_URL = import.meta.env.VITE_APP_API_URL;
 
 function ListCapsulesPage() {
@@ -92,10 +93,14 @@ function ListCapsulesPage() {
   }
 
   return (
-    <Container className="my-4">
-      <div className="text-center mb-4">
-        <h2 className="fw-bold">Your Capsules</h2>
-      </div>
+    <Container className="my-5 position-relative z-1" style={{ minHeight: "80vh" }}>
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center mb-5"
+      >
+        <h2 className="fw-bold text-gradient brand-font display-5">Your Capsules</h2>
+      </motion.div>
 
       {capsules.length === 0 ? (
         <p className="text-center">You haven’t created any capsules yet.</p>
@@ -106,35 +111,40 @@ function ListCapsulesPage() {
 
             return (
               <Col key={capsule.id}>
-                <Card className="h-100 shadow-sm rounded-4">
-                  {capsule.media_url && (
-                    <Card.Img
-                      variant="top"
-                      src={capsule.media_url}
-                      alt={capsule.title}
-                      className="rounded-top"
-                      style={{ height: "200px", objectFit: "cover" }}
-                    />
-                  )}
-                  <Card.Body>
-                    <Card.Title>{capsule.title}</Card.Title>
-                    <Card.Text className="text-muted">
-                      Unlock Date:{" "}
-                      {new Date(capsule.unlock_date).toLocaleDateString()}
-                    </Card.Text>
-                    <Badge bg={isLocked ? "secondary" : "success"}>
-                      {isLocked ? "Locked" : "Unlocked"}
-                    </Badge>
-                  </Card.Body>
-                  <Card.Footer className="d-flex justify-content-between gap-2">
-                    <Button
-                      variant="outline-primary"
-                      size="sm"
-                      className="btn btn-primary text-white fw-bold"
-                      onClick={() => navigate(`/capsule/${capsule.id}`)}
-                    >
-                      View
-                    </Button>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  whileHover={{ y: -5 }}
+                  transition={{ duration: 0.3 }}
+                  className="h-100"
+                >
+                  <Card className="h-100 glass-card overflow-hidden">
+                    {capsule.media_url && (
+                      <Card.Img
+                        variant="top"
+                        src={capsule.media_url}
+                        alt={capsule.title}
+                        style={{ height: "200px", objectFit: "cover", opacity: 0.85 }}
+                      />
+                    )}
+                    <Card.Body className="bg-dark bg-opacity-50">
+                      <Card.Title className="fw-bold text-primary brand-font fs-4">{capsule.title}</Card.Title>
+                      <Card.Text className="text-white-50">
+                        Unlock Date:{" "}
+                        <span className="text-white">{new Date(capsule.unlock_date).toLocaleDateString()}</span>
+                      </Card.Text>
+                      <Badge bg={isLocked ? "secondary" : "success"} className="px-3 py-2 rounded-pill">
+                        {isLocked ? "Locked 🔒" : "Unlocked 🔓"}
+                      </Badge>
+                    </Card.Body>
+                    <Card.Footer className="bg-dark bg-opacity-50 d-flex justify-content-between gap-2 border-0 pb-4 pt-0">
+                      <Button
+                        size="sm"
+                        className="btn-premium-outline px-4"
+                        onClick={() => navigate(`/capsule/${capsule.id}`)}
+                      >
+                        View
+                      </Button>
                     {/* <Button
                       variant="outline-warning"
                       size="sm"
@@ -143,16 +153,17 @@ function ListCapsulesPage() {
                     >
                       Edit
                     </Button> */}
-                    <Button
-                      variant="outline-danger"
-                      size="sm"
-                      className="btn btn-danger text-white fw-bold"
-                      onClick={() => handleDelete(capsule.id)}
-                    >
-                      Delete
-                    </Button>
-                  </Card.Footer>
-                </Card>
+                      <Button
+                        variant="outline-danger"
+                        size="sm"
+                        className="rounded-pill px-4"
+                        onClick={() => handleDelete(capsule.id)}
+                      >
+                        Delete
+                      </Button>
+                    </Card.Footer>
+                  </Card>
+                </motion.div>
               </Col>
             );
           })}

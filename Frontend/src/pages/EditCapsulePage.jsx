@@ -10,6 +10,7 @@ import {
   Spinner,
 } from "react-bootstrap";
 import Swal from "sweetalert2";
+import { motion } from "framer-motion";
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
 
@@ -100,61 +101,74 @@ if (isLoading) {
 }
 
   return (
-    <Container className="my-4">
+    <Container className="my-5 position-relative z-1" style={{ minHeight: "80vh" }}>
       <Row className="justify-content-center">
-        <Col md={8} lg={6}>
-          <h2 className="text-center fw-bold mb-4">Edit Capsule</h2>
-          <Card className="shadow-sm border-0 rounded-4">
-            <Card.Body className="p-4">
-              <Form onSubmit={handleUpdate}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Capsule Title</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    required
-                  />
-                </Form.Group>
+        <Col md={10} lg={8}>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="text-center mb-4">
+              <h2 className="fw-bold text-gradient brand-font display-5">Edit Capsule</h2>
+            </div>
+            <Card className="glass-panel border-0 text-white">
+              <Card.Body className="p-4 p-md-5">
+                <Form onSubmit={handleUpdate}>
+                  <Form.Group className="mb-4">
+                    <Form.Label className="fw-semibold text-white-50">Capsule Title</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      required
+                      className="bg-dark bg-opacity-50 text-white border-secondary border-opacity-25 py-2"
+                    />
+                  </Form.Group>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Your Message</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={5}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    required
-                  />
-                </Form.Group>
+                  <Form.Group className="mb-4">
+                    <Form.Label className="fw-semibold text-white-50">Your Message</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows={5}
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      required
+                      className="bg-dark bg-opacity-50 text-white border-secondary border-opacity-25 py-2"
+                    />
+                  </Form.Group>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Media URL</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={mediaURL}
-                    onChange={(e) => setMediaURL(e.target.value)}
-                  />
-                </Form.Group>
+                  <Form.Group className="mb-4">
+                    <Form.Label className="fw-semibold text-white-50">Media URL</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={mediaURL}
+                      onChange={(e) => setMediaURL(e.target.value)}
+                      className="bg-dark bg-opacity-50 text-white border-secondary border-opacity-25 py-2"
+                    />
+                  </Form.Group>
 
-                <Form.Group className="mb-4">
-                  <Form.Label>Unlock Date</Form.Label>
-                  <Form.Control
-                    type="date"
-                    value={unlockDate}
-                    onChange={(e) => setUnlockDate(e.target.value)}
-                    required
-                  />
-                </Form.Group>
+                  <Form.Group className="mb-5">
+                    <Form.Label className="fw-semibold text-white-50">Unlock Date</Form.Label>
+                    <Form.Control
+                      type="date"
+                      value={unlockDate}
+                      onChange={(e) => setUnlockDate(e.target.value)}
+                      required
+                      className="bg-dark bg-opacity-50 text-white border-secondary border-opacity-25 py-2"
+                      style={{ colorScheme: 'dark' }}
+                    />
+                  </Form.Group>
 
-                <div className="d-grid">
-                  <Button variant="primary" type="submit">
-                    Save Changes
-                  </Button>
-                </div>
-              </Form>
-            </Card.Body>
-          </Card>
+                  <div className="d-grid mt-2">
+                    <Button type="submit" className="btn-premium">
+                      Save Changes
+                    </Button>
+                  </div>
+                </Form>
+              </Card.Body>
+            </Card>
+          </motion.div>
         </Col>
       </Row>
     </Container>
