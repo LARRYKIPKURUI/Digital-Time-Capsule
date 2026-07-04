@@ -7,15 +7,14 @@ function CustomNavbar({ isLoggedIn, onLogout }) {
 
   const isActive = (path) =>
     location.pathname === path
-      ? "text-primary  text-underline fs-5 font-monospace"
-      : "text-white px-3 font-monospace fs-5";
+      ? "text-primary fs-5 brand-font fw-bold"
+      : "text-muted px-3 fs-5 brand-font";
 
   return (
     <Navbar
       expand="lg"
-      bg="dark"
       variant="dark"
-      className="py-3 sticky-top shadow-sm"
+      className="py-3 sticky-top glass-nav"
     >
       <Container fluid className="px-lg-5">
         {/* DTC title and Logo */}
@@ -27,7 +26,7 @@ function CustomNavbar({ isLoggedIn, onLogout }) {
             className="d-inline-block align-top me-2"
             alt="DTC Logo"
           />
-          <span className="fw-bold fs-4 text-primary mx-2">DTC</span>
+          <span className="fw-bold fs-4 text-gradient mx-2 brand-font">DTC</span>
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -56,12 +55,12 @@ function CustomNavbar({ isLoggedIn, onLogout }) {
               <Button
                 variant="outline-light"
                 onClick={onLogout}
-                className="rounded-pill px-4 py-2 fw-semibold"
+                className="btn-premium-outline px-4 py-2"
               >
                 Log Out
               </Button>
             ) : (
-              <Nav.Link as={Link} to="/login" className={isActive("/login")}>
+              <Nav.Link as={Link} to="/login" className="btn-premium px-4 py-2 text-white">
                 Log In
               </Nav.Link>
             )}

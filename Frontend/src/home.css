@@ -1,4 +1,3 @@
-
 .home-page-container {
   min-height: calc(100vh - (var(--navbar-height, 70px) + var(--footer-height, 200px))); 
   display: flex;
@@ -6,13 +5,13 @@
   width: 100%;
 }
 
-
 .hero-section {
   position: relative;
-  height: 80vh; 
+  min-height: 90vh; 
   background-image: url('./assets/background1.jpeg'); 
   background-size: cover;
   background-position: center;
+  background-attachment: fixed;
   overflow: hidden; 
 }
 
@@ -24,44 +23,36 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.3); 
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px); 
+  background: linear-gradient(to bottom, rgba(11, 15, 25, 0.8), rgba(11, 15, 25, 0.95));
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px); 
   z-index: 1;
 }
-
 
 .hero-content {
   position: relative;
   z-index: 2;
   max-width: 900px;
-  background-color: rgba(0, 0, 0, 0.4); 
-  border-radius: 1rem;
-  padding: 3rem !important; 
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); 
+  width: 90%;
+  margin: 0 auto;
 }
 
-
 .icon-circle {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.8rem;
   font-weight: bold;
+  color: white;
+  transition: transform 0.3s ease;
 }
 
-
-.bg-secondary-dark {
-  background-color: #212529;
-}
-
-/* Responsiveness across diff screen sizes */
 @media (max-width: 768px) {
   .hero-section {
-    height: 70vh; 
+    min-height: 80vh; 
   }
 
   .hero-content {
@@ -72,13 +63,9 @@
     font-size: 2.5rem; 
   }
 
-  .hero-content p.lead {
-    font-size: 1rem; 
-  }
-
   .icon-circle {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     font-size: 1.5rem;
   }
 }

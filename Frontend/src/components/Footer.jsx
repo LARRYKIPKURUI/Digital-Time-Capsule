@@ -9,13 +9,13 @@ function Footer() {
 
   return (
     
-    <footer className="bg-dark text-white pt-5 pb-3  shadow-lg">
+    <footer className="glass-panel text-white pt-5 pb-3 mt-5 mx-2 mx-md-4 mb-4 shadow-lg">
       <Container>
         <Row className="mb-4">
 
           {/* Brand/About Section */}
           <Col lg={4} md={6} className="mb-4 mb-lg-0">
-            <h5 className="text-uppercase fw-bold mb-3 text-primary">DTC</h5>
+            <h5 className="text-uppercase fw-bold mb-3 text-gradient brand-font">DTC</h5>
             <p className="text-white-50">
               Preserving your precious moments for the future. Digital Time Capsule allows you to create and store memories securely.
             </p>
@@ -23,7 +23,7 @@ function Footer() {
 
           {/* Quick Links Section */}
           <Col lg={2} md={6} className="mb-4 mb-lg-0">
-            <h5 className="text-uppercase fw-bold mb-3 text-primary">Quick Links</h5>
+            <h5 className="text-uppercase fw-bold mb-3 text-gradient brand-font">Quick Links</h5>
             <Nav className="flex-column">
               <Nav.Link as={Link} to="/" className="text-white-50 py-1">Home</Nav.Link>
               <Nav.Link as={Link} to="/about" className="text-white-50 py-1">About Us</Nav.Link>
@@ -34,7 +34,7 @@ function Footer() {
 
           {/* Capsule Links Section */}
           <Col lg={3} md={6} className="mb-4 mb-md-0">
-            <h5 className="text-uppercase fw-bold mb-3 text-primary">Capsules</h5>
+            <h5 className="text-uppercase fw-bold mb-3 text-gradient brand-font">Capsules</h5>
             <Nav className="flex-column">
               <Nav.Link as={Link} to="/new" className="text-white-50 py-1">Create New Capsule</Nav.Link>
               <Nav.Link as={Link} to="/capsules" className="text-white-50 py-1">View My Capsules</Nav.Link>
@@ -44,7 +44,7 @@ function Footer() {
 
           {/* Contact Section */}
           <Col lg={3} md={6} className="mb-4 mb-md-0">
-            <h5 className="text-uppercase fw-bold mb-3 text-primary">Contact Us</h5>
+            <h5 className="text-uppercase fw-bold mb-3 text-gradient brand-font">Contact Us</h5>
             <ul className="list-unstyled text-white-50">
               <li className="mb-2">
                 <FontAwesomeIcon icon={faEnvelope} className="me-2 text-primary" /> info@dtc.com

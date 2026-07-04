@@ -21,13 +21,17 @@ function App() {
   };
 
   return (
-    <>
+    <div className="position-relative overflow-hidden">
+      {/* Global Glowing Orbs */}
+      <div className="glowing-orb orb-1"></div>
+      <div className="glowing-orb orb-2"></div>
+      
       <NavBar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
-      <div className="p-4 bg-dark">
+      <div className="min-vh-100 position-relative z-1">
         <AppRoutes setIsLoggedIn={setIsLoggedIn} />
       </div>
       <Footer />
-    </>
+    </div>
   );
 }
 
